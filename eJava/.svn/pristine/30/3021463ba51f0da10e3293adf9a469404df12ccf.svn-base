@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"                
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:bb="http://java.sun.com/jsf/composite/bubbles"
+                template="/WEB-INF/templates/homeTemplate.xhtml">
+<!--    <ui:define name="leftPane">
+        <ui:include src="/contacts.xhtml" />
+    </ui:define>-->
+
+    <ui:define name="centerPane">
+        <ui:include src="/discussions.xhtml" />
+    </ui:define>
+
+    <ui:define name="rightPane">
+        <ui:include src="#{discussionBean.bubblesSrc}" />
+    </ui:define>
+
+</ui:composition>

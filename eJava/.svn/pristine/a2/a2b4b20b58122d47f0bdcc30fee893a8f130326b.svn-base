@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation>
+        <ui:define name="title">BubbleApp Login</ui:define>
+
+        <h:form id="loginForm">
+
+            <p:fieldset legend="Login" style="width: 50%">
+                <hr/>
+                <h:panelGrid columns="3" columnClasses="loginLabel, loginText, loginMsg ">
+                    Username: 
+                    <p:inputText id="username"
+                                           value="#{loginBean.username}" size="20" required="true" maxlength="30"
+                                           requiredMessage="Please enter your name"/>
+                    <p:message id="username_error" for="username" />
+
+                    Password: 
+                    <p:password id="password"
+                                          value="#{loginBean.password}"
+                                          size="20"
+                                          required="true"
+                                          requiredMessage="Please enter your password"/>
+                    <p:message id="password_error" for="password" />
+                </h:panelGrid>
+                <hr />
+
+                <h:panelGrid columns="2">
+
+                    <p:commandButton value="Login" action="#{loginBean.login}" ajax="false"                                
+                                     process="@form"
+                                     update=":welcomeRightPG"/>
+
+                    <p:commandButton value="SignUp" actionListener="#{loginBean.showRegister}" immediate="true"                                 
+                                     update=":welcomeRightPG"/>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+    </composite:implementation>
+</html>

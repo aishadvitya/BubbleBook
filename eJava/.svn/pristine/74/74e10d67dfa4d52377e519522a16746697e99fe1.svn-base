@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+ <h:head>
+        <title>Text Bubble</title>
+ </h:head>
+  <h:body>
+         <h:outputStylesheet library="css" name="styles.css"/>
+         <input type="hidden" name="diplay" value="create" />
+       
+         <h:form id="form1" rendered="true">    
+             <h:panelGrid headerClass="list-header"
+    rowClasses="list-row-even, list-row-odd"
+    styleClass="bubble">   
+                 <h:panelGroup id="leftcol1" layout="block" >
+                     <h:panelGroup  layout="block" rendered="#{textBubble.editable}">
+                         <p:inputTextarea value="#{textBubble.text}"/> 
+                         <h:commandButton value="Submit" action="#{textBubble.createEntityToPersist()}"/>
+                        </h:panelGroup>
+                      <h:panelGroup  layout="block" rendered="#{!textBubble.editable}">
+                         <p:outputLabel value="#{textBubble.text}"/> 
+                        <p:commandLink value="Edit" action="#{textBubble.render()}" update="@form"/> 
+                        </h:panelGroup>
+                  <h:commandLink value="Reply" />
+                       <h:commandLink value="Hide" />
+                 </h:panelGroup> 
+             </h:panelGrid>  
+    </h:form>
+    </h:body>
+</html>

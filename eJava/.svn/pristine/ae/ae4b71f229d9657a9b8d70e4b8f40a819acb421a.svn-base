@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"                
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:bb="http://java.sun.com/jsf/composite/bubbles"
+                template="/WEB-INF/templates/masterLayout.xhtml">
+
+    <ui:define name="header">
+        <bb:header header="#{msg.title}" showUser="false"/>
+    </ui:define>
+
+
+    <ui:define name="body">
+
+        <p:layoutUnit position="center" style="height: 70%;text-align: center;" collapsible="false" resizable="false" closable="false">
+            <h:panelGrid columns="2" style="text-align: center;" columnClasses="leftPaneWelcome,rightPaneWelcome">
+                <h:panelGroup>
+                    Bubble App is an unified Application for social Communication, media and events discussion
+                    within a Town Hall. People who are all members can be added to the discussion forum.
+
+
+                </h:panelGroup>
+
+
+                <h:panelGroup id="rightPanelGroup">
+
+                    <h:form id="registerForm" enctype="multipart/form-data">
+
+                        <p:fieldset id="panel" legend="Register" style="width: 100%">
+                            <p:focus context="panel"/>  
+
+                            <p:messages />  
+
+                            <h:panelGrid columns="3" columnClasses="registerLabel, registerText, registerMsg">  
+                                <h:outputLabel for="firstname" value="Firstname: *" />  
+                                <p:inputText id="firstname" required="true" label="Firstname"  
+                                             value="#{loginBean.username}" >  
+                                    <f:validateLength minimum="2" />  
+                                </p:inputText>  
+                                <p:message for="firstname" />  
+
+                                <h:outputLabel for="password" value="Password: *" />  
+                                <p:password id="password" required="true" label="Password"  
+                                            value="#{loginBean.password}" />  
+                                <p:message for="password" />
+
+                                <h:outputLabel for="abtme" value="About me: *" />  
+                                <p:inputText id="abtme" required="true" label="About me"  
+                                             value="#{loginBean.aboutme}" />  
+                                <p:message for="abtme" /> 
+
+                                <h:outputLabel for="email" value="E-Mail: *" />  
+                                <p:inputText id="email" required="true" label="E-Mail"  
+                                             value="#{loginBean.email}" />  
+                                <p:message for="email" /> 
+
+
+                            </h:panelGrid>  
+                            <hr />
+
+                            <p:growl id="msg" />
+                            Upload a Pic:<br/><br />
+
+
+                            <p:outputPanel id="photogroup" rendered="#{not empty loginBean.file}">
+                                #{loginBean.file.fileName}
+                            </p:outputPanel>
+
+                            <p:fileUpload
+                                value="#{loginBean.file}"
+                                mode="advanced"
+                                fileUploadListener="#{loginBean.handleFileUpload}"
+                                allowTypes="/(\.|\/)(gif|jpg|jpeg|gif|png|PNG|GIF|JPG|JPEG)$/" 
+                                auto="false"
+                                update="msg"
+                                oncomplete="photogroup"/>                    
+
+                            <hr />
+
+                            <h:panelGrid columns="2">
+                                <p:commandButton value="Reset" process="@form"
+                                                 update=":rightPanelGroup"> 
+                                    <p:resetInput target="panel" />  
+                                </p:commandButton>
+                                <h:commandButton value="Register"
+                                                 actionListener="#{loginBean.saveUser}" />  
+                            </h:panelGrid>
+                        </p:fieldset> 
+                    </h:form>
+
+
+
+                </h:panelGroup>
+            </h:panelGrid>
+        </p:layoutUnit>
+    </ui:define>
+</ui:composition>            
+

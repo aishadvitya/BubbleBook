@@ -1,0 +1,72 @@
+/* 
+    Document   : mainStyle
+    Created on : Oct 24, 2013, 1:57:23 PM
+    Author     : Sathish
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.no-border{
+    border: 0px none transparent;
+}
+
+.no-overflow{
+    overflow: hidden;    
+}
+
+.leftPane{
+    width: 15%;height:auto;
+    text-align: center;
+}
+.rightPane{
+    width: 60%;
+    height:100%;
+    text-align: left;
+}
+.centerPane{
+    width: 40%;
+    height:100%;
+    text-align: left;
+}
+
+.leftPaneWelcome{
+    width: 30%;height:auto;
+    vertical-align: top;
+    text-align: right;
+}
+.rightPaneWelcome{
+    width: 40%;height:auto;
+    text-align: left;
+    vertical-align: top;
+}
+
+.loginLabel{
+    width: 30%;
+}
+
+.loginText{
+    width: 30%;
+}
+
+.loginMsg{
+    width: 30%;
+}
+
+.registerLabel{
+    width: 30%;
+    text-align: left;
+}
+
+.registerText{
+    width: 30%;
+    text-align: left;
+}
+
+.registerMsg{
+    width: 30%;
+    text-align: left;
+}

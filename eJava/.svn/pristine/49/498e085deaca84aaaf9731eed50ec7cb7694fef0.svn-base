@@ -1,0 +1,114 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.util;
+
+import com.iss.bubble.ejb.BubbleEJB;
+import com.iss.bubble.entity.BubbleEmail;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
+import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
+import javax.ejb.MessageDriven;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
+import javax.mail.Address;
+import javax.mail.BodyPart;
+import javax.mail.Multipart;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+
+import javax.mail.internet.MimeMultipart;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+/**
+ *
+ * @author Sathish
+ */
+//@MessageDriven(
+//        mappedName = "jms/bubbleMailQueue",
+//        activationConfig = {
+//            @ActivationConfigProperty(propertyName = "destinationType",
+//                    propertyValue = "javax.jms.Queue"),
+//            @ActivationConfigProperty(propertyName = "destinationName",
+//                    propertyValue = "jms/bubbleMailQueue")
+//        })
+public class BubbleMailProcessorBean implements MessageListener {
+
+    @EJB
+    BubbleEJB bubbleEjb;
+
+    private static final Logger logger = Logger.getLogger(BubbleMailProcessorBean.class.getName());
+    private static final String EMAIL_PASSWORD = "BUBBLE_BOOK_EMAIL_PASSWORD";
+
+    @PersistenceContext
+    private EntityManager em;
+    @Resource(lookup = "mail/gmail")
+    private Session mailSession;
+
+    @Override
+    public void onMessage(Message message) {
+
+        BubbleEmail newBubble = null;
+        BubbleEmail packet;
+
+        ObjectMessage objMsg = (ObjectMessage) message;
+
+        logger.log(Level.INFO, "Got message: {0}", objMsg);
+
+        try {
+            newBubble = (BubbleEmail) objMsg.getObject();
+        } catch (JMSException ex) {
+            logger.log(Level.WARNING, "Cannot deserialize message", ex);
+            return;
+        }
+
+        packet = em.find(BubbleEmail.class, newBubble.getBubbleId());
+        if (null == packet) {
+            em.persist(newBubble);
+            logger.log(Level.INFO, "Inserted: {0}", newBubble);
+        } else {
+            packet.setBubbleContent(newBubble.getBubbleContent());
+            packet.setBubbleId(newBubble.getBubbleId());
+            packet.setToAddress(newBubble.getToAddress());
+            packet.setUserId(newBubble.getUserId());
+            packet = em.merge(newBubble);
+            logger.log(Level.INFO, "Updated: {0}", newBubble);
+        }
+
+        try {
+            sendEmail(newBubble);
+        } catch (Exception ex) {
+            logger.log(Level.WARNING, "Cannot send email:", ex);
+        }
+    }
+
+    private void sendEmail(BubbleEmail bubble) throws Exception {
+         
+        
+       javax.mail.Message message = new MimeMessage((MimeMessage)mailSession);
+        Address to = new InternetAddress(bubble.getToAddress());
+        message.setRecipient(javax.mail.Message.RecipientType.TO, to);
+        Multipart body=new MimeMultipart();
+        BodyPart part=new MimeBodyPart();
+        part.setText(bubble.getBubbleContent());
+        body.addBodyPart(part);
+         message.setFrom(new InternetAddress("donnotreply@bubblebook.com",EMAIL_PASSWORD));
+        message.setContent(body);
+        message.setSubject("Msg from BubbleBook User" + bubble.getSubject());
+        StringBuilder sb = new StringBuilder();
+        sb.append("Content:\n ").append(bubble.getBubbleContent()).append("\n");
+        part.setContent(sb.toString(), "text/plain");
+        body.addBodyPart(part);
+        message.setContent(body);
+        Transport.send(message);
+      }
+}

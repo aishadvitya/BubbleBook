@@ -1,0 +1,196 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.entity;
+
+import java.util.ArrayList;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author Sathish
+ */
+@Entity
+@DiscriminatorColumn(name = "BUBBLE_TYPE")
+@DiscriminatorValue("SURVEY")
+@PrimaryKeyJoinColumn(name = "BUBBLE_ID")
+@Table(name = "BUBBLE_SURVEY", schema = "EJAVA")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "BubbleSurvey.findAll", query = "SELECT b FROM BubbleSurvey b"),
+    @NamedQuery(name = "BubbleSurvey.findByBubbleId", query = "SELECT b FROM BubbleSurvey b WHERE b.bubbleId = :bubbleId"),
+    @NamedQuery(name = "BubbleSurvey.findByAnswer1Count", query = "SELECT b FROM BubbleSurvey b WHERE b.answer1Count = :answer1Count"),
+    @NamedQuery(name = "BubbleSurvey.findByAnswer2Count", query = "SELECT b FROM BubbleSurvey b WHERE b.answer2Count = :answer2Count"),
+    @NamedQuery(name = "BubbleSurvey.findByAnswer3Count", query = "SELECT b FROM BubbleSurvey b WHERE b.answer3Count = :answer3Count"),
+    @NamedQuery(name = "BubbleSurvey.findByAnswer4Count", query = "SELECT b FROM BubbleSurvey b WHERE b.answer4Count = :answer4Count"),
+    @NamedQuery(name = "BubbleSurvey.findByAnswer5Count", query = "SELECT b FROM BubbleSurvey b WHERE b.answer5Count = :answer5Count"),
+    @NamedQuery(name = "BubbleSurvey.findByAnswer1", query = "SELECT b FROM BubbleSurvey b WHERE b.answer1 = :answer1"),
+    @NamedQuery(name = "BubbleSurvey.findByAnswer2", query = "SELECT b FROM BubbleSurvey b WHERE b.answer2 = :answer2"),
+    @NamedQuery(name = "BubbleSurvey.findByAnswer3", query = "SELECT b FROM BubbleSurvey b WHERE b.answer3 = :answer3"),
+    @NamedQuery(name = "BubbleSurvey.findByAnswer4", query = "SELECT b FROM BubbleSurvey b WHERE b.answer4 = :answer4"),
+    @NamedQuery(name = "BubbleSurvey.findByAnswer5", query = "SELECT b FROM BubbleSurvey b WHERE b.answer5 = :answer5")})
+public class BubbleSurvey extends Bubble {
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ANSWER1_COUNT")
+    private double answer1Count;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ANSWER2_COUNT")
+    private double answer2Count;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "ANSWER3_COUNT")
+    private Double answer3Count;
+    @Column(name = "ANSWER4_COUNT")
+    private Double answer4Count;
+    @Column(name = "ANSWER5_COUNT")
+    private Integer answer5Count;
+    @Size(max = 50)
+    @Column(name = "ANSWER1")
+    private String answer1="N/A";
+    @Size(max = 50)
+    @Column(name = "ANSWER2")
+    private String answer2="N/A";
+    @Size(max = 50)
+    @Column(name = "ANSWER3")
+    private String answer3="N/A";
+    @Size(max = 50)
+    @Column(name = "ANSWER4")
+    private String answer4="N/A";
+    @Size(max = 50)
+    @Column(name = "ANSWER5")
+    private String answer5="N/A";
+
+    @Transient
+    private String response;
+
+    @Transient
+    private ArrayList<String> answers = new ArrayList<>();
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
+    }
+
+    public ArrayList<String> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(ArrayList<String> answers) {
+        this.answers = answers;
+    }
+
+    public BubbleSurvey() {
+    }
+
+    public BubbleSurvey(String answer1, String answer2, double answer1Count, double answer2Count) {
+        this.answer1 = answer1;
+        this.answer2 = answer2;
+        this.answer1Count = answer1Count;
+        this.answer2Count = answer2Count;
+    }
+
+    public double getAnswer1Count() {
+        return answer1Count;
+    }
+
+    public void setAnswer1Count(double answer1Count) {
+        this.answer1Count = answer1Count;
+    }
+
+    public double getAnswer2Count() {
+        return answer2Count;
+    }
+
+    public void setAnswer2Count(double answer2Count) {
+        this.answer2Count = answer2Count;
+    }
+
+    public Double getAnswer3Count() {
+        return answer3Count;
+    }
+
+    public void setAnswer3Count(Double answer3Count) {
+        this.answer3Count = answer3Count;
+    }
+
+    public Double getAnswer4Count() {
+        return answer4Count;
+    }
+
+    public void setAnswer4Count(Double answer4Count) {
+        this.answer4Count = answer4Count;
+    }
+
+    public Integer getAnswer5Count() {
+        return answer5Count;
+    }
+
+    public void setAnswer5Count(Integer answer5Count) {
+        this.answer5Count = answer5Count;
+    }
+
+    public String getAnswer1() {
+        return answer1;
+    }
+
+    public void setAnswer1(String answer1) {
+        this.answer1 = answer1;
+    }
+
+    public String getAnswer2() {
+        return answer2;
+    }
+
+    public void setAnswer2(String answer2) {
+        this.answer2 = answer2;
+    }
+
+    public String getAnswer3() {
+        return answer3;
+    }
+
+    public void setAnswer3(String answer3) {
+        this.answer3 = answer3;
+    }
+
+    public String getAnswer4() {
+        return answer4;
+    }
+
+    public void setAnswer4(String answer4) {
+        this.answer4 = answer4;
+    }
+
+    public String getAnswer5() {
+        return answer5;
+    }
+
+    public void setAnswer5(String answer5) {
+        this.answer5 = answer5;
+    }
+
+    @Override
+    public String toString() {
+        return "com.iss.bubble.entity.BubbleSurvey[ bubbleId=" + "surveybubble" + " ]";
+    }
+
+}

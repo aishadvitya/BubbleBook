@@ -1,0 +1,36 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+        <composite:attribute name="value" required="true" type="com.iss.bubble.entity.Bubble"/>
+    </composite:interface>
+
+    <composite:implementation>
+
+        <h:panelGroup id="leftcol1" layout="block">
+
+
+            <h:panelGroup  layout="block" rendered="#{cc.attrs.value.isEditable}">
+                <p:inputTextarea value="#{cc.attrs.value.bubbleContent}"/> 
+                <p:commandButton value="Submit" action="#{discussionBean.saveEditedEnity(cc.attrs.value.bubbleContent)}" process="@form" update="@form"/>
+
+            </h:panelGroup>
+
+
+            <h:panelGroup  layout="block" rendered="#{!cc.attrs.value.isEditable}">
+                <p:outputLabel value="#{cc.attrs.value.bubbleContent}"/> 
+                <br/>
+
+            </h:panelGroup>
+            <p:commandLink id="ajax" rendered="#{!cc.attrs.value.isEditable}" process="@form" update="@form" action="#{discussionBean.editBubble(cc.attrs.value)}" style="margin-right:20px;">  
+                <h:outputText value="Edit" />  
+
+            </p:commandLink>
+        </h:panelGroup> 
+        <p:outputLabel value=" - #{cc.attrs.value.userId.name}, #{cc.attrs.value.createTimestamp}"/>                
+
+    </composite:implementation>
+</html>
+

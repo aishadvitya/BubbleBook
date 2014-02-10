@@ -1,0 +1,158 @@
+/* 
+    Document   : mainStyle
+    Created on : Oct 24, 2013, 1:57:23 PM
+    Author     : Sathish
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.no-border{
+    border: 0px none transparent;
+}
+
+.no-overflow{
+    overflow: hidden;    
+}
+
+.homeLeftPane{
+    width: 40%;
+    height:100%;
+    text-align: left;
+    vertical-align: top;
+}
+.leftPane{
+    width: 0px;height:auto;
+    text-align: center;
+}
+td.leftPane{
+    width:400px;
+
+}
+.rightPane{
+    width: 60%;
+    height:100%;
+    text-align: left;
+    vertical-align: top;
+}
+.centerPane{
+    width: 100px;
+    height:100%;
+    text-align: left;
+    vertical-align: top;
+}
+.homeCenterPane{
+    width: 60%;
+    height:100%;
+    text-align: left;
+    vertical-align: top;
+}
+
+.leftPaneWelcome{
+    width: 30%;
+    height:600px;
+    vertical-align: top;
+    text-align: justify;
+    background-image: url("#{resource['img:dummy_connecting.jpg']}");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-origin: border-box;
+}
+.rightPaneWelcome{
+    width: 40%;
+    height:600px;
+    vertical-align: top;
+    text-align: left;    
+}
+
+.loginLabel{
+    width: 30%;
+}
+
+.loginText{
+    width: 30%;
+}
+
+.loginMsg{
+    width: 30%;
+}
+
+.registerLabel{
+    width: 30%;
+    text-align: left;
+}
+
+.registerText{
+    width: 30%;
+    text-align: left;
+}
+
+.registerMsg{
+    width: 30%;
+    text-align: left;
+}
+
+#check{
+    padding-right: 5px;
+}
+
+.welcome-back-image{
+    background-image: url("#{resource['img:dummy_connecting.jpg']}");
+}
+#homeGrid
+{
+    width:910px;
+}
+#discussionForm{
+    width:410px;
+}
+#bubblesForm{
+
+    width:750px;
+}
+.ui-tree .ui-tree-container {
+    margin: 0;
+    padding: 3px;
+    white-space: nowrap;
+    overflow: auto;
+    width: 650px;
+    min-height: 700px;
+}
+.homeLogo{
+    background-image: url("#{resource['img:BubbleLogo.gif']}");
+    background-size: auto;
+}
+.right-align{
+    text-align: right;
+    vertical-align: top;
+}
+.center-align{
+    text-align: center; 
+    vertical-align: top;
+}
+
+.html-primefaces-theme-comp{
+    display: inline-block;
+    position: relative;
+    padding: 0;
+    margin-right: .1em;
+    text-decoration: none !important;
+    cursor: pointer;
+    text-align: center;
+    zoom: 1;
+    overflow: visible;
+    font-family: Lucida Grande, Lucida Sans, Arial, sans-serif;
+    text-shadow: 0px 1px 0px rgba(255,255,255,0.7);
+    font-weight: bold;
+    color: #2e6e9e;
+    border: 1px solid #c5dbec;
+    background: #dfeffc url("#{resource['primefaces-redmond:images/ui-bg_glass_85_dfeffc_1x400.png']}") 50% 50% repeat-x;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0px 1px 0px #fff;
+    box-shadow: inset 0px 1px 0px #fff;
+}

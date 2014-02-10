@@ -1,0 +1,84 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.ejb;
+
+import com.iss.bubble.entity.Bubble;
+import com.iss.bubble.entity.BubbleBookUser;
+import com.iss.bubble.entity.BubbleEvent;
+import com.iss.bubble.entity.BubbleMap;
+import com.iss.bubble.entity.Discussion;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+/**
+ *
+ * @author Sathish
+ */
+@Stateless
+public class BubbleEJB {
+
+    @PersistenceContext
+    EntityManager em;
+
+    public void saveEvent(BubbleEvent b) {
+        try {
+            em.persist(b);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void saveMap(Bubble b) {
+        try {
+            // Test case close  
+            em.persist(b);
+            System.out.println("inside persist" + b.toString());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+        }
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public Collection<Bubble> retrieveBubbles(int discussionId){
+           // List<Bubble> lstBubbles=new ArrayList<Bubble>();
+         Discussion dis=em.find(Discussion.class,discussionId);
+         
+         
+    System.out.println("nags "+ dis.getDiscussionId());
+        System.out.println("nags "+ dis.getTitle());
+//            if(null==dis)
+//                return null;
+         List<Bubble> bubbles=new ArrayList<>();   
+        bubbles=(List<Bubble>)dis.getBubbleCollection();
+            System.out.println("nags "+ bubbles.size());    
+            //Collections.sort(bubbles);
+            
+           // Bubble b=new Bubble();
+            
+            
+                    
+            
+           return dis.getBubbleCollection();
+        
+        //return null;
+    }
+     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public Collection<Discussion> getAllDiscussions(int userID){
+         BubbleBookUser user=em.find(BubbleBookUser.class,userID);
+         if(null==user)
+            return null;
+         System.out.println("nags discussion"+ user.getBubbleBookUserCollection().size());
+         return user.getDiscussionCollection();
+    }
+    
+}

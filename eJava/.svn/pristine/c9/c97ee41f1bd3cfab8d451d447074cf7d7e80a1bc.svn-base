@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <head>
+        <title>TODO supply a title</title>
+    </head>
+    <body>
+        <h:form id="surveyDisplayForm">
+
+            <h:outputText value="#{bubble.question}"></h:outputText>
+
+            <p:selectOneRadio value="#{bubble.answer}" layout="pageDirection">  
+                <f:selectItems value="#{bubble.answers}" />  
+            </p:selectOneRadio>  
+
+            <h:panelGrid columns="3">  
+                <p:radioButton id="opt1" for="customRadio" itemIndex="0"/>  
+                <h:outputLabel for="opt1" value="Option 1" />  
+
+                <p:radioButton id="opt2" for="customRadio" itemIndex="1"/>  
+                <h:outputLabel for="opt2" value="Option 2" />  
+
+                <p:radioButton id="opt3" for="customRadio" itemIndex="2"/>  
+                <h:outputLabel for="opt3" value="Option 3" />  
+
+
+                <h:outputLabel for="opt4" value="Option 4" />
+
+            </h:panelGrid>
+        </h:form>
+    </body>
+</html>

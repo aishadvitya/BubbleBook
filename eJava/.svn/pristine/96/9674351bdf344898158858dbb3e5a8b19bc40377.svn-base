@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:bb="http://java.sun.com/jsf/composite/bubbles"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:bubbles="http://java.sun.com/jsf/composite/bubbles">
+    <h:outputStylesheet library="css" name="styles.css" /> 
+    <h:form id="bubblesForm">
+
+        <p:commandButton id="createNew" value="Create Bubble" rendered="#{discussionBean.discSelected}"/>
+        <!-- Context Menu-->
+        <p:contextMenu for="createNew" event="click">  
+            <p:menuitem value="Map" actionListener="#{discussionBean.createNewBubble('MAP')}"
+                        icon="ui-icon-image" ajax="true" update="tree"> 
+
+
+                    </p:menuitem>
+                    <p:menuitem value="Text" actionListener="#{discussionBean.createNewBubble('TEXT')}"
+                                icon="ui-icon-comment" update="treetable" ajax="true">
+                    </p:menuitem>
+                    <p:menuitem value="Event" actionListener="#{discussionBean.createNewBubble('EVENT')}"
+                                icon="ui-icon-clock"  update="treetable" ajax="true"/>  
+                    <p:menuitem value="Survey" actionListener="#{discussionBean.createNewBubble('SURVEY')}" 
+                                icon="ui-icon-script" update="treetable" ajax="true"/>  
+                    <p:menuitem value="Audio/Video" actionListener="#{discussionBean.createNewBubble('AV')}"
+                                icon="ui-icon-video" update="treetable" ajax="true"/>  
+
+
+                </p:contextMenu>
+
+                <h:panelGroup id="tree">
+                    <p:contextMenu for="treetable">  
+                        <p:menuitem value="Map" actionListener="#{discussionBean.replyNewBubble('MAP')}" 
+                                    icon="ui-icon-image" update=":bubblesForm:treetable" ajax="true"/>  
+                        <p:menuitem value="Text" actionListener="#{discussionBean.replyNewBubble('TEXT')}" 
+                                    icon="ui-icon-comment"  update=":bubblesForm:treetable" ajax="true"/>  
+                        <p:menuitem value="Survey" actionListener="#{discussionBean.replyNewBubble('SURVEY')}" 
+                                    icon="ui-icon-script"   update=":bubblesForm:treetable" ajax="true"/>  
+                        <p:menuitem value="Event" actionListener="#{discussionBean.replyNewBubble('EVENT')}" 
+                                    icon="ui-icon-clock"  update=":bubblesForm:treetable" ajax="true" />
+                        <p:menuitem value="Audio/Video" actionListener="#{discussionBean.replyNewBubble('AV')}" 
+                                    icon="ui-icon-video"  update=":bubblesForm:treetable" ajax="true" />
+                    </p:contextMenu>
+                    <p:tree id="treetable" value="#{discussionBean.root}" var="b" 
+                            style="width:500px"  animate="true" dynamic="true"
+                            selectionMode="single" selection="#{discussionBean.selectedNode}"
+                            > 
+                        <p:ajax event="expand" update=":bubblesForm:treetable" listener="#{discussionBean.onNodeExpand}" />  
+
+
+                        <p:treeNode>    
+
+                            <div class="bubble">
+
+                                <h:panelGroup id="map" rendered="#{b.bubbleType.contains('MAP')}" >
+
+                                    <bubbles:Map value="#{b}" />
+
+                                </h:panelGroup>
+
+                                <h:panelGroup id="text" rendered="#{b.bubbleType.contains('TEXT')}"  >
+                                    <bubbles:Text value="#{b}" />
+                                </h:panelGroup>
+
+                                <h:panelGroup id="survey" rendered="#{b.bubbleType.contains('SURVEY')}"  >
+                                    <bubbles:Survey value="#{b}" />
+                                </h:panelGroup>
+
+                                <h:panelGroup id="video" rendered="#{b.bubbleType.contains('AV')}"  >
+                                    <bubbles:Video value="#{b}" />
+                                </h:panelGroup>
+                                <h:panelGroup id="event" rendered="#{b.bubbleType.contains('EVENT')}"  >
+                                    <bubbles:Event value="#{b}" />
+                                </h:panelGroup>
+
+
+                            </div>
+
+                        </p:treeNode>  
+                    </p:tree>  
+                </h:panelGroup>
+
+    </h:form> 
+
+</html>

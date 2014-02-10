@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:bb="http://java.sun.com/jsf/composite/bubbles"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:form id="discussionForm">
+
+        <p:growl id="growl" showDetail="true"/>
+        <p:panelGrid columns="2">
+            <h:panelGroup>
+                <h:outputText value="#{loginBean.bubbleBookUser.name}"/>
+            </h:panelGroup>
+            <p:commandButton value="New Discussion" actionListener="#{discussionBean.createNewDiscussion()}" process="@form" update=":homeGrid"/>
+        </p:panelGrid>
+
+        <p:dataTable id="discussionTable" var="disc" value="#{discussionBean.discussionsModel}" paginator="true" rows="10"  
+                     selection="#{discussionBean.selectedDiscussion}" selectionMode="single">
+
+            <p:ajax event="rowToggle" listener="#{discussionBean.onRowToggle}" update=":discussionForm:growl" />
+            <p:ajax event="rowSelect" listener="#{discussionBean.onRowSelect}"   process="@form"
+                    update=":homeGrid :discussionForm:growl" />  
+            <p:ajax event="rowUnselect" listener="#{discussionBean.onRowUnselect}" update=":discussionForm:growl"/>  
+
+            <p:column style="width:2%">
+                <p:rowToggler />
+            </p:column>
+
+            <p:column style="width:69%">
+                <f:facet name="header">
+                    Title
+                </f:facet>
+                <h:outputText value="#{disc.title}" />
+            </p:column>
+
+            <p:column style="width:29%">
+                <f:facet name="header">
+                    Created On
+                </f:facet>
+                <h:outputText value="#{disc.createTimestamp}" >
+                    <f:convertDateTime pattern="EEE, MMM d, ''yy" />
+                </h:outputText>
+            </p:column>
+
+            <p:rowExpansion>
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="width:300px;"
+                             styleClass=" ui-widget-content grid">
+
+                    <f:facet name="header">
+                        <ui:repeat value="#{disc.bubbleBookUserCollection}" var="participant">
+                            <p:graphicImage value="#{participant.image}.jpg"/>
+                        </ui:repeat>
+
+                    </f:facet>
+
+                    <h:outputText value="Title:" />
+                    <h:outputText id="title" value="#{disc.title}" />
+
+                    <h:outputText value=" Created On:" />
+                    <h:outputText id="year" value="#{disc.createTimestamp}" >
+                        <f:convertDateTime pattern="EEE, MMM d, ''yy" />
+                    </h:outputText>
+
+                    <h:outputText value="Description:" />
+                    <h:outputText value="#{disc.description}"/>
+
+                    <h:outputText value="Participants:" />
+                    <ui:repeat value="#{disc.bubbleBookUserCollection}" var="participant">
+                        <h:outputText value="#{participant.name}"/>
+                    </ui:repeat>
+                </h:panelGrid>
+
+            </p:rowExpansion>
+        </p:dataTable>
+    </h:form>
+    
+</html>

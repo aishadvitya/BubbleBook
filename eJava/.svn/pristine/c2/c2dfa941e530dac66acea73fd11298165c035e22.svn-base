@@ -1,0 +1,57 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.util;
+
+import com.iss.bubble.entity.BubbleBookUser;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import org.primefaces.model.map.DefaultMapModel;
+import org.primefaces.model.map.LatLng;
+import org.primefaces.model.map.MapModel;
+import org.primefaces.model.map.Marker;
+
+/**
+ *
+ * @author Sathish
+ */
+public class BubbleUtil {
+
+    public static HttpSession getSession() {
+        return (HttpSession) FacesContext.getCurrentInstance().
+                getExternalContext().getSession(false);
+    }
+
+    public static HttpServletRequest getRequest() {
+        return (HttpServletRequest) FacesContext.getCurrentInstance().
+                getExternalContext().getRequest();
+    }
+
+    public static String getUserName() {
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        return session.getAttribute("username").toString();
+    }
+
+    public static String getUserId() {
+        HttpSession session = getSession();
+        if (session != null) {
+            return (String) session.getAttribute("userid");
+        } else {
+            return null;
+        }
+    }
+
+    public static BubbleBookUser getCurrentUserFromSession() {
+        return (BubbleBookUser) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("bubblebookuser");
+    }
+
+    public MapModel getSimpleMapModel(Double lat, Double lng) {
+        LatLng coord1 = new LatLng(lat, lng);
+        Marker marker = new Marker(coord1);
+        MapModel simpleModel = new DefaultMapModel();
+        simpleModel.addOverlay(marker);
+        return simpleModel;
+    }
+}

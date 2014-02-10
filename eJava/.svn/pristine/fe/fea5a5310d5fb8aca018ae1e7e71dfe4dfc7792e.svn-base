@@ -1,0 +1,7 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui">
+    <p:layoutUnit position="south" collapsible="false" style="text-align: center;height: 10%" resizable="false" closable="false" styleClass="no-overflow">
+        <font color="orange" style="text-align: center" class="no-overflow">  Copyright © 2013 Team 2 Inc.  All rights reserved.</font>
+    </p:layoutUnit>
+</html>

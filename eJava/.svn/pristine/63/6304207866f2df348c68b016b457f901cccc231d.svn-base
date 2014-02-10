@@ -1,0 +1,71 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.ejb;
+
+import com.iss.bubble.entity.BubbleBookUser;
+import com.iss.bubble.entity.Discussion;
+import java.util.List;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+/**
+ *
+ * @author Aishwarya
+ */
+@Stateless
+public class DiscussionEJB {
+
+    @PersistenceContext
+    EntityManager em;
+
+    public DiscussionEJB() {
+    }
+
+    public List<BubbleBookUser> getAllUsers(){
+         Query queryForAllUsers = em.createNamedQuery("BubbleBookUser.findAll");
+        return (List<BubbleBookUser>)queryForAllUsers.getResultList();
+       }
+    
+       
+
+
+
+
+    /**
+     *
+     * @param participantList
+     * @param discussionId
+     */
+
+    public void addUsersToDiscussion(List<BubbleBookUser> participantList,Integer discussionId){
+      Discussion d=em.find(Discussion.class,1234);
+      d.setBubbleBookUserCollection(participantList);
+      System.out.println("Aish2"+participantList.get(0));
+      System.out.print("Aish"+d.getDiscussionId());
+      em.persist(d);
+            
+   }
+    
+    
+    
+
+//    public void addUsersToDiscussion(List<BubbleBookUser> participantList, Integer discussionId) {
+//        //users= em.find(BubbleBookUser.class,34);
+//        System.out.println("hello from aish");
+//        Query q = em.createNamedQuery("Discussion.findByDiscussionId");
+//        q.setParameter("discussionId", 1234);
+//        Discussion discussion = (Discussion) q.getSingleResult();
+//        discussion.setBubbleBookUserCollection(participantList);
+//        em.merge(discussion);
+//
+//    }
+
+    public Discussion findDiscussionByID(Integer key) {
+        return em.find(Discussion.class, key);
+    }
+
+}

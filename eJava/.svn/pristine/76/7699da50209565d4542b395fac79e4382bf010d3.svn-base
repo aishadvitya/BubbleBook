@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"                
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:bb="http://java.sun.com/jsf/composite/bubbles"
+                template="/WEB-INF/templates/masterLayout.xhtml">
+
+    <ui:define name="header">
+        <p:layoutUnit size="80" position="north" collapsible="false" resizable="false" closable="false">
+            <bb:header header="#{msg.title}" showUser="false"/>
+        </p:layoutUnit>
+    </ui:define>
+
+    <ui:define name="body">
+        
+        <p:layoutUnit position="center" style="height: 70%;text-align: center;" collapsible="false" resizable="false" closable="false" >
+            <h:panelGrid columns="2" style="text-align: center;" columnClasses="leftPaneWelcome,rightPaneWelcome">
+                <h:panelGroup>
+                    <font color="white">  Bubble App is an unified Application for social Communication, media and events discussion
+                        within a Town Hall. People who are all members can be added to the discussion forum.</font>
+                    
+       
+                </h:panelGroup>
+                <h:panelGroup id="welcomeRightPG">
+                    <bb:login rendered="#{!loginBean.isNewUser}" id="loginPanel"/>
+                    
+                     <!-- File Upload Part -->
+                     
+                    
+                    <bb:register rendered="#{loginBean.isNewUser}" id="registerPanel"/>
+                </h:panelGroup>
+            </h:panelGrid>
+        </p:layoutUnit>
+    </ui:define>
+</ui:composition>

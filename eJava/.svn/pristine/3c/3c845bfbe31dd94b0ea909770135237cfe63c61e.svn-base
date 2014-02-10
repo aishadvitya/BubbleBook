@@ -1,0 +1,54 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.util;
+
+import com.iss.bubble.ejb.BubbleEJB;
+import com.iss.bubble.entity.BubbleEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
+import javax.ejb.MessageDriven;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
+
+/**
+ *
+ * @author Test //
+ */
+//@MessageDriven(
+//    mappedName="jms/warehouseQueue",
+//    activateConfig={
+//        @ActivationConfigProperty (propertyName="desinationType" propertyValue="javax.jms.Queue"),
+//         
+//    }
+//        )
+// @MessageDriven(
+//         mappedName="jms/warehouseQueue",
+//         activationConfig =
+//{@ActivationConfigProperty(propertyName="destinationType",
+//    propertyValue="javax.jms.Queue"),
+// @ActivationConfigProperty(propertyName="destinationName",
+//    propertyValue="jms/warehouseQueue")
+//})
+public class BubbleProcessorBean implements MessageListener {
+
+    @EJB
+    BubbleEJB bubbleEjb;
+
+    @Override
+    public void onMessage(Message message) {
+        try {
+            ObjectMessage objectMsg = (ObjectMessage) message;
+            BubbleEvent be = (BubbleEvent) objectMsg.getObject();
+            bubbleEjb.saveEvent(be);
+        } catch (JMSException ex) {
+            Logger.getLogger(BubbleProcessorBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+}

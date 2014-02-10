@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:bb="http://java.sun.com/jsf/composite/bubbles"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+   
+    <h:head>
+        <title>Map Bubble</title>
+        <script src="http://maps.google.com/maps/api/js?sensor=true"
+        type="text/javascript"></script>
+    </h:head>
+    <h:body>
+    <h:form id="bubblesForm">
+  <h:outputStylesheet library="css" name="styles.css"/>
+        <p:growl id="growl" showDetail="true"/>
+
+        <p:treeTable id="treetable" value="#{discussionBean.root}" var="b" scrollable="true" scrollHeight="550" styleClass="bubbles"    >
+            <f:facet name="header">
+                Bubbles
+            </f:facet>
+
+
+            <p:column style="width:40%">
+    <!--           <h:form id="form1" rendered="#{b.bubbleType=='MAP'}" styleClass="bubbles">    
+                 <h:panelGrid headerClass="list-header"
+                              rowClasses="list-row-even, list-row-odd" styleClass="bubbles">   
+                     <h:panelGroup id="leftcol1" layout="block" styleClass="bubbles" >
+                         <h:panelGroup  layout="block" rendered="#{textBubble.editable}">
+                              <p:inputTextarea value="#{textBubble.text}"/> 
+                              <h:commandButton value="Submit" action="#{textBubble.createEntityToPersist()}"/>
+                            </h:panelGroup>
+                            <h:panelGroup  layout="block" rendered="#{!textBubble.editable}">
+                              <p:outputLabel value="#{textBubble.text}"/> 
+                              <p:commandLink value="Edit" action="#{textBubble.render()}" update="@form"/> 
+                            </h:panelGroup>
+                      <h:commandLink value="Reply" />
+                           <h:commandLink value="Hide" />
+                     </h:panelGroup> 
+                </h:panelGrid>               
+               </h:form>-->
+
+                <h:form id="map" rendered="#{b.bubbleType=='MAP'}">
+                    <h:panelGrid styleClass="bubble">   
+                        <h:panelGroup  layout="block">
+                        <p:outputLabel value="#{b.bubbleContent}"/>                       
+                    </h:panelGroup>
+                    <h:panelGroup id="leftcol" layout="block" >
+                        <p:growl id="messages" showDetail="true" life="2000" />        
+                        <div>
+                        <p:gmap id="maps" center="12,45" zoom="7" type="HYBRID" style="width:200px;height:170px" model="#{bubbleUtil.getSimpleMapModel(12.0, 45.0)}"  widgetVar="map"/>  
+                        </div>
+                    </h:panelGroup> 
+                    </h:panelGrid>
+                </h:form>
+                
+                <h:form id="text" rendered="#{b.bubbleType=='TEXT'}" >
+                   <h:panelGroup id="leftcol1" layout="block" styleClass="bubble">
+                      <h:panelGroup  layout="block">
+                         <p:outputLabel value="#{b.bubbleContent}"/> 
+                        </h:panelGroup>
+                  <h:commandLink value="Reply" />
+                       <h:commandLink value="Hide" />
+                 </h:panelGroup> 
+
+                </h:form>
+
+            </p:column>
+        </p:treeTable>
+    </h:form>   
+        </h:body>
+</html>

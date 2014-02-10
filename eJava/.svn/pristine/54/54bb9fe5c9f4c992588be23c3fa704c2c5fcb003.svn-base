@@ -1,0 +1,119 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.bean;
+
+
+import com.iss.bubble.ejb.DiscussionEJB;
+import com.iss.bubble.entity.BubbleBookUser;
+import com.iss.bubble.entity.Image;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import com.iss.bubble.entity.BubbleBookUser;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
+
+/**
+ *
+ * @author Sathish
+ */
+@Named
+@SessionScoped
+public class ContactsBean implements Serializable{
+
+    private List<BubbleBookUser> myContacts;
+    private BubbleBookUser selectedContact;
+    private List<BubbleBookUser> filteredBubbles;
+    private List<String> selectedOptions;
+
+    @EJB DiscussionEJB disc;
+    
+
+
+
+
+    @PostConstruct
+
+    public void Initialize(){
+      myContacts=disc.getAllUsers();
+      selectedOptions=new ArrayList<>();
+      filteredBubbles=new ArrayList<>();
+    }
+
+    public void ContactsBean(){
+        myContacts = new ArrayList<>();
+        myContacts.add(new BubbleBookUser(2, "Sathy", "****", "sathy@mail.com"));
+
+    }
+
+
+    public BubbleBookUser getSelectedContact() {
+        return selectedContact;
+    }
+
+    public void setSelectedContact(BubbleBookUser selectedContact) {
+        this.selectedContact = selectedContact;
+    }
+
+    public DiscussionEJB getDisc() {
+        return disc;
+    }
+
+    public void setDisc(DiscussionEJB disc) {
+        this.disc = disc;
+    }
+    
+     public ContactsBean(){
+     }
+
+    public List<String> getSelectedOptions() {
+        return selectedOptions;
+    }
+
+    public void setSelectedOptions(List<String> selectedOptions) {
+        this.selectedOptions = selectedOptions;
+    }
+
+
+
+    public List<BubbleBookUser> getFilteredBubbles() {
+
+        return filteredBubbles;
+    }
+
+    public void setFilteredBubbles(List<BubbleBookUser> filteredBubbles) {
+        this.filteredBubbles = filteredBubbles;
+    }
+        
+    public List<BubbleBookUser> getMyContacts() {
+        return myContacts;
+    }
+
+    public void setMyContacts(List<BubbleBookUser> myContacts) {
+        this.myContacts = myContacts;
+    }
+   
+    public void addToFilteredBubble(){
+       for(BubbleBookUser b:myContacts){
+           System.out.println(selectedOptions.get(0));
+           if(b.getUserId().toString().equals(selectedOptions.get(0))){
+              filteredBubbles.add(b);
+           }
+               
+       }
+      
+    }
+    
+    public void saveToDiscussion(){
+        System.out.println(filteredBubbles);
+      disc.addUsersToDiscussion(filteredBubbles,1235);
+    }
+}

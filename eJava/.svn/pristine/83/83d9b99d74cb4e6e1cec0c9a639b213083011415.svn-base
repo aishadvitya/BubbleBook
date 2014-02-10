@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+
+    <composite:interface>
+        <composite:attribute name="value" required="true" type="com.iss.bubble.entity.Bubble"/>
+
+
+    </composite:interface>
+
+    <composite:implementation>
+
+        <h:panelGroup id="viewEdit" rendered="#{not empty cc.attrs.value.bubbleId}">
+
+            <h:panelGroup layout="block">
+                <big>Survey Title</big> :  <p:inplace id="ajaxInplace1" editor="#{cc.attrs.value.userId.email eq request.remoteUser}" event="dblclick" >  
+
+                        <p:ajax event="save" listener="#{discussionBean.saveEditedBubble(cc.attrs.value)}" update="@form"/>
+                        <p:ajax event="cancel" update="@form"/>
+                        <p:inputText value="#{cc.attrs.value.bubbleContent}" >
+                        </p:inputText>
+                    </p:inplace>
+            </h:panelGroup>
+            <h:panelGroup layout="block" id="ansPanel1">
+
+                <big>Option</big> :  
+                <p:selectOneRadio id="optional2" value="#{cc.attrs.value.response}" rendered="#{cc.attrs.value.answer3.equals('N/A')}">  
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer1}" itemValue="1"/>
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer2}" itemValue="2"/>
+                    
+
+                </p:selectOneRadio>   
+               
+                    
+                      <p:selectOneRadio id="optional3" value="#{cc.attrs.value.response}" rendered="#{ (!cc.attrs.value.answer3.equals('N/A')) and (cc.attrs.value.answer4.equals('N/A')) and (cc.attrs.value.answer5.equals('N/A'))}">  
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer1}" itemValue="1"/>
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer2}" itemValue="2"/>
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer3}" itemValue="3"/>
+                    
+
+                </p:selectOneRadio>   
+                
+                  <p:selectOneRadio id="optional4" value="#{cc.attrs.value.response}" rendered="#{(!cc.attrs.value.answer3.equals('N/A')) and (!cc.attrs.value.answer4.equals('N/A')) and (cc.attrs.value.answer5.equals('N/A'))}">  
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer1}" itemValue="1"/>
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer2}" itemValue="2"/>
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer3}" itemValue="3"/>
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer4}" itemValue="4"/>
+
+                    
+                    
+
+                </p:selectOneRadio>   
+                
+                <p:selectOneRadio id="optiona5" value="#{cc.attrs.value.response}" rendered="#{(!cc.attrs.value.answer3.equals('N/A')) and (!cc.attrs.value.answer4.equals('N/A')) and (!cc.attrs.value.answer5.equals('N/A'))}">  
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer1}" itemValue="1"/>
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer2}" itemValue="2"/>
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer3}" itemValue="3"/>
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer4}" itemValue="4"/>
+
+                    <f:selectItem itemLabel="#{cc.attrs.value.answer5}" itemValue="5"/>
+                    
+
+                </p:selectOneRadio>   
+                
+                
+
+                <p:commandButton value="submit response"  update="output1 output2 output3 output4 output5" actionListener="#{surveyBubbleBean.updateResponse(cc.attrs.value)}"/> <br/>
+
+                <h:outputLabel value="#{cc.attrs.value.answer1}"/> <h:outputLabel id="output1" value="#{cc.attrs.value.answer1Count}"/> <br/>
+                <h:outputLabel value="#{cc.attrs.value.answer2}"/>  <h:outputLabel id="output2" value="#{cc.attrs.value.answer2Count}"/> <br/>
+                <h:outputLabel  value="#{cc.attrs.value.answer3}" rendered="#{!cc.attrs.value.answer3.equals('N/A')}"/>  <h:outputLabel id="output3" value="#{cc.attrs.value.answer3Count}" rendered="#{!cc.attrs.value.answer3.equals('N/A')}"/> <br/>
+                <h:outputLabel  value="#{cc.attrs.value.answer4}" rendered="#{!cc.attrs.value.answer4.equals('N/A')}"/>  <h:outputLabel id="output4" value="#{cc.attrs.value.answer4Count}" rendered="#{!cc.attrs.value.answer4.equals('N/A')}"/> <br/>
+                <h:outputLabel  value="#{cc.attrs.value.answer5}" rendered="#{!cc.attrs.value.answer5.equals('N/A')}"/>  <h:outputLabel id="output5" value="#{cc.attrs.value.answer5Count}" rendered="#{!cc.attrs.value.answer5.equals('N/A')}"/> <br/>
+
+            </h:panelGroup>           
+       <p:separator />
+        <h:graphicImage id="img" library="temp" url="/resources/temp/#{b.userId.imageUrl}" width="30" height="30">
+                <p:tooltip for="img" value="#{cc.attrs.value.userId.name}"/>
+            </h:graphicImage>
+            <p:outputLabel value="#{cc.attrs.value.createTimestamp}">
+                <f:convertDateTime pattern="EEE, MMM, dd, yyyy HH:mm" />
+            </p:outputLabel>
+        </h:panelGroup>
+
+        <h:panelGroup id="createSurvey" rendered="#{empty cc.attrs.value.bubbleId}">
+            <h:panelGroup layout="block">
+                <p:outputLabel value="Question"/>
+                <p:inputTextarea value="#{discussionBean.surveyBubble.bubbleContent}"/>
+            </h:panelGroup>
+            <br/>
+            <h:message for="ansPanel"/>
+            <h:panelGroup layout="block" id="ansPanel">
+
+                <p:outputLabel value="Response1"/><p:inputText id="response1" value="#{discussionBean.surveyBubble.answer1}" required="true"/>
+                <p:watermark for="response1" value="Should enter atleast 2" />  
+                <br/>
+                <p:outputLabel value="Response2"/><p:inputText id="response2" value="#{discussionBean.surveyBubble.answer2}" required="true" />
+
+                <br/>
+                <p:outputLabel value="Response3"/><p:inputText id="response3" value="#{discussionBean.surveyBubble.answer3}"/>
+                <p:watermark for="response2" value="Should enter atleast 2" />  
+                <br/>
+                <p:outputLabel value="Response4"/><p:inputText id="response4" value="#{discussionBean.surveyBubble.answer4}"/>
+                <br/>    
+                <p:outputLabel value="Response5"/><p:inputText id="response5" value="#{discussionBean.surveyBubble.answer5}"/>
+                <br/>
+                <p:commandButton value="Save" actionListener="#{discussionBean.done}"  update=":bubblesForm:treetable"/>
+                <p:commandButton value="Cancel" action="#{discussionBean.cancelBubble()}" update=":bubblesForm:treetable"/>
+            </h:panelGroup>
+
+        </h:panelGroup>
+
+
+    </composite:implementation>
+
+</html>
+

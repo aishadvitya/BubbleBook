@@ -1,0 +1,75 @@
+<!--Server config-->
+<security-service default-realm="jdbcRealm" activate-default-principal-to-role-mapping="true">
+        <auth-realm classname="com.sun.enterprise.security.auth.realm.file.FileRealm" name="admin-realm">
+          <property name="file" value="${com.sun.aas.instanceRoot}/config/admin-keyfile"></property>
+          <property name="jaas-context" value="fileRealm"></property>
+        </auth-realm>
+        <auth-realm classname="com.sun.enterprise.security.auth.realm.file.FileRealm" name="file">
+          <property name="file" value="${com.sun.aas.instanceRoot}/config/keyfile"></property>
+          <property name="jaas-context" value="fileRealm"></property>
+        </auth-realm>
+        <auth-realm classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm" name="certificate"></auth-realm>
+        <auth-realm name="jdbcRealm" classname="com.sun.enterprise.security.ee.auth.realm.jdbc.JDBCRealm">
+          <property name="jaas-context" value="jdbcRealm"></property>
+          <property name="password-column" value="password"></property>
+          <property name="datasource-jndi" value="jdbc/BubbleDataSource"></property>
+          <property name="group-table" value="ejava.v_user_role"></property>
+          <property name="user-table" value="ejava.v_user_role"></property>
+          <property name="group-name-column" value="group_name"></property>
+          <property name="digestrealm-password-enc-algorithm" value="none"></property>
+          <property name="user-name-column" value="email"></property>
+          <property name="group-table-user-name-column" value="email"></property>
+        </auth-realm>
+        <jacc-provider policy-provider="com.sun.enterprise.security.provider.PolicyWrapper" name="default" policy-configuration-factory-provider="com.sun.enterprise.security.provider.PolicyConfigurationFactoryImpl">
+          <property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy"></property>
+        </jacc-provider>
+        <jacc-provider policy-provider="com.sun.enterprise.security.jacc.provider.SimplePolicyProvider" name="simple" policy-configuration-factory-provider="com.sun.enterprise.security.jacc.provider.SimplePolicyConfigurationFactory"></jacc-provider>
+        <audit-module classname="com.sun.enterprise.security.ee.Audit" name="default">
+          <property name="auditOn" value="false"></property>
+        </audit-module>
+        <message-security-config auth-layer="SOAP">
+          <provider-config provider-type="client" provider-id="XWS_ClientProvider" class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule">
+            <request-policy auth-source="content"></request-policy>
+            <response-policy auth-source="content"></response-policy>
+            <property name="encryption.key.alias" value="s1as"></property>
+            <property name="signature.key.alias" value="s1as"></property>
+            <property name="dynamic.username.password" value="false"></property>
+            <property name="debug" value="false"></property>
+          </provider-config>
+          <provider-config provider-type="client" provider-id="ClientProvider" class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule">
+            <request-policy auth-source="content"></request-policy>
+            <response-policy auth-source="content"></response-policy>
+            <property name="encryption.key.alias" value="s1as"></property>
+            <property name="signature.key.alias" value="s1as"></property>
+            <property name="dynamic.username.password" value="false"></property>
+            <property name="debug" value="false"></property>
+            <property name="security.config" value="${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml"></property>
+          </provider-config>
+          <provider-config provider-type="server" provider-id="XWS_ServerProvider" class-name="com.sun.xml.wss.provider.ServerSecurityAuthModule">
+            <request-policy auth-source="content"></request-policy>
+            <response-policy auth-source="content"></response-policy>
+            <property name="encryption.key.alias" value="s1as"></property>
+            <property name="signature.key.alias" value="s1as"></property>
+            <property name="debug" value="false"></property>
+          </provider-config>
+          <provider-config provider-type="server" provider-id="ServerProvider" class-name="com.sun.xml.wss.provider.ServerSecurityAuthModule">
+            <request-policy auth-source="content"></request-policy>
+            <response-policy auth-source="content"></response-policy>
+            <property name="encryption.key.alias" value="s1as"></property>
+            <property name="signature.key.alias" value="s1as"></property>
+            <property name="debug" value="false"></property>
+            <property name="security.config" value="${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml"></property>
+          </provider-config>
+        </message-security-config>
+        <message-security-config auth-layer="HttpServlet">
+          <provider-config provider-type="server" provider-id="GFConsoleAuthModule" class-name="org.glassfish.admingui.common.security.AdminConsoleAuthModule">
+            <request-policy auth-source="sender"></request-policy>
+            <response-policy></response-policy>
+            <property name="loginPage" value="/login.jsf"></property>
+            <property name="loginErrorPage" value="/loginError.jsf"></property>
+          </provider-config>
+        </message-security-config>
+        <property name="default-digest-algorithm" value="SHA-256"></property>
+      </security-service>
+      
+      <!--- END -->

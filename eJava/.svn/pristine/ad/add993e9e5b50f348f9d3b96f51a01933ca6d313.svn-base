@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+   
+    <h:head>
+        <title>New Discussion</title>
+    </h:head>
+     <style type="text/css">
+			#check{
+                            padding-right: 5px;
+			}
+                        </style>
+    <h:form id="newDiscussionForm">
+        <p:growl id="growl" showDetail="true"/>
+        <h:panelGrid columns="1"  style="width:300px;">
+            <h:panelGroup>
+                <h:outputText value="Title:" />
+                <h:inputText id="title" value="checjThis" />
+            </h:panelGroup>
+            <h:outputText value="Description:" />
+            <h:inputTextarea value="check" />
+            <p:commandButton value="Submit" update="display" oncomplete="PF('dlg').show()"/>  
+             <p:dialog widgetVar="dlg" modal="true">  
+            <h:panelGrid id="display" columns="3" cellpadding="2">  
+            <ui:repeat var="part" value="#{contactsBean.myContacts}">      
+             <p:selectManyCheckbox id="check" value="#{contactsBean.selectedOptions}" style="padding-right: 10px">  
+                  <f:ajax listener="#{contactsBean.addToFilteredBubble()}" execute="check"/>
+                  <f:selectItem itemLabel="#{part.name}" itemValue="#{part.userId}">
+                  </f:selectItem>
+            </p:selectManyCheckbox> 
+            <h:graphicImage value="#{part.image}" width="80" height="80" style="padding-left: 5px"/>
+            </ui:repeat>
+             <p:commandButton value="Done" oncomplete="PF('dlg').close()">
+                <f:ajax  listener="#{contactsBean.saveToDiscussion()}"/>
+             </p:commandButton>
+         </h:panelGrid>  
+      </p:dialog>  
+        
+       </h:panelGrid>
+    </h:form>
+</html>

@@ -1,0 +1,350 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.bean;
+
+import com.iss.bubble.ejb.UserEJB;
+import com.iss.bubble.entity.BubbleBookUser;
+import com.iss.bubble.util.BubbleUtil;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
+import javax.faces.FacesException;
+import javax.faces.application.FacesMessage;
+import org.apache.commons.io.IOUtils;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageOutputStream;
+import javax.servlet.http.HttpSession;
+import javax.swing.ImageIcon;
+import javax.validation.constraints.Size;
+import org.primefaces.event.CaptureEvent;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
+
+/**
+ *
+ * @author Sathish
+ */
+@ManagedBean
+@ViewScoped
+public class LoginBean implements Serializable {
+
+    @EJB
+    UserEJB userEJB;
+
+    public LoginBean() {
+        bubbleBookUser = new BubbleBookUser();
+    }
+
+    private BubbleBookUser bubbleBookUser;
+    private String username;
+    
+    @Size(min = 1, max = 100)
+    private String password;
+    
+    @Size(min = 1, max = 100)
+    private String email;
+    
+    private String aboutme;
+    private ImageIcon imageIcon;
+    private boolean isNewUser = false;
+    private UploadedFile file;
+    private InputStream imagefile;
+    private String imageUrl;
+    
+    private String workingDir;
+    
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAboutme() {
+        return aboutme;
+    }
+
+    public void setAboutme(String aboutme) {
+        this.aboutme = aboutme;
+    }
+
+    public UploadedFile getFile() {
+        return file;
+    }
+
+    public void setFile(UploadedFile file) {
+        this.file = file;
+        System.out.println("FILE " + file.getFileName());
+    }
+
+    public boolean isIsNewUser() {
+        return isNewUser;
+    }
+
+    public void setIsNewUser(boolean isNewUser) {
+        this.isNewUser = isNewUser;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public BubbleBookUser getBubbleBookUser() {
+        return bubbleBookUser;
+    }
+
+    public void setBubbleBookUser(BubbleBookUser bubbleBookUser) {
+        this.bubbleBookUser = bubbleBookUser;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String validateUser() {
+        return "";
+    }
+
+    public String logout() {
+        HttpSession session = BubbleUtil.getSession();
+        session.invalidate();
+        return "welcome";
+    }
+
+    public String login() {
+        
+        System.out.println("login " + this.email);
+        BubbleBookUser user = userEJB.isAuthenticated(this.email, this.password);
+        System.out.println("Authenticate user: " + user);
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (user == null){
+            FacesMessage error = new FacesMessage("Invalid email or password. Try again.");
+            context.addMessage(":loginForm:password_error", error);
+            return null;
+        }else{
+            //go to home page.
+            Map<String, Object> sessionMap = context.getExternalContext().getSessionMap();
+            sessionMap.put("bubblebookuser", user);
+            System.out.println("Login: User in session: " + sessionMap.get("bubblebookuser").toString());
+            return ("home?faces-redirect=true");
+        }
+
+    }
+
+    public void showRegister(ActionEvent actionEvent) {
+        isNewUser = true;
+        System.out.println("showRegister " + isNewUser);
+    }
+
+    //unused. try for pajax
+    public void checkEmail(){
+        System.out.println("In check mail-->");
+        if(userEJB.emailExists(this.email)){
+            System.out.println("Check mail: Email already exists! Cannot register.");
+            FacesContext context = FacesContext.getCurrentInstance();
+            FacesMessage msg = new FacesMessage();
+            msg.setSummary("Email id already exists!");
+            context.addMessage(null, msg);
+        }
+    }
+    
+    public boolean hasEmail(){
+        return userEJB.emailExists(this.email);
+    }
+
+    
+    public String saveUser() {
+        
+        if (hasEmail()){
+            System.out.println("Email already exists! Cannot register.");
+            FacesContext context = FacesContext.getCurrentInstance();
+            FacesMessage error = new FacesMessage("Email already exists!");
+            context.addMessage(":registerForm:registerPanel:email", error);
+            return null;
+        }else{
+            
+            byte[] bytes = null;
+            try {
+                bytes = IOUtils.toByteArray(imagefile);
+            } catch (IOException ex) {
+                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            System.out.println(bubbleBookUser.getName());
+            System.out.println("saveUser " + isNewUser);
+            System.out.println("file " + file);
+            System.out.println("email " + email);
+            System.out.println("Save image " + bytes);
+
+            bubbleBookUser.setAbtMe(aboutme);
+            bubbleBookUser.setPassword(password);
+            bubbleBookUser.setEmail(email);
+            bubbleBookUser.setName(username);
+            bubbleBookUser.setImageUrl(imageUrl);
+            
+            
+            
+            
+            bubbleBookUser.setLastLogonTime(new Date());
+
+            Boolean success = userEJB.saveBookUser(bubbleBookUser);
+            
+            if (success){
+                System.out.println("Successful Registration: " + success);
+                // goto home page.
+                FacesContext context = FacesContext.getCurrentInstance();
+                Map<String, Object> sessionMap = context.getExternalContext().getSessionMap();
+                BubbleBookUser user = userEJB.findUserByEmail(this.email);
+                sessionMap.put("bubblebookuser", user);
+                System.out.println("Register: User in session: " + sessionMap.get("bubblebookuser").toString());
+                return ("home?faces-redirect=true");
+            }else{
+                System.out.println("Registration failed: " + success);
+                return null;
+            }
+        }
+    }
+
+    private List<String> photos = new ArrayList<String>();
+
+    private String getRandomImageName() {
+        int i = (int) (Math.random() * 10000000);
+        return String.valueOf(i);
+    }
+
+    public List<String> getPhotos() {
+        return photos;
+    }
+
+    public void oncapture(CaptureEvent captureEvent) {
+
+        System.out.println("Stored at ---------------> ");
+
+        String photo = getRandomImageName();
+        this.photos.add(0, photo);
+        byte[] data = captureEvent.getData();
+
+        //ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();  
+        //String newFileName = servletContext.getRealPath("") + File.separator + "photocam" + File.separator + photo + ".png";  
+        String newFileName = "F:\\temp\\" + photo + ".png";
+        FileImageOutputStream imageOutput;
+        try {
+            imageOutput = new FileImageOutputStream(new File(newFileName));
+            imageOutput.write(data, 0, data.length);
+            imageOutput.close();
+
+        } catch (Exception e) {
+            throw new FacesException("Error in writing captured image.");
+        }
+    }
+
+    public StreamedContent getImageFile() {
+        StreamedContent content = null;
+        try {
+            //        Image i = image.findImage(4730L);
+            //        InputStream is = new ByteArrayInputStream(i.getImageblob());
+            //        content =  new DefaultStreamedContent(is, i.getName());
+            //        return content;
+            //        return null;
+
+            if (this.file != null) {
+                content = new DefaultStreamedContent(file.getInputstream(), file.getFileName());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return content;
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+        try {
+
+            System.out.println("YO  " + event.getFile());
+            file = event.getFile();
+            System.out.println("FO  " + file.getFileName());
+
+            workingDir = System.getProperty("user.dir") + "\\temp";
+            System.out.println("Working dir " + workingDir);
+            
+            File targetFolder = new File(workingDir);
+            if (!targetFolder.exists()){
+                System.out.println("Target folder :" + targetFolder + " Success? " + targetFolder.mkdirs());
+            }
+            
+            InputStream inputStream = event.getFile().getInputstream();
+            OutputStream out = new FileOutputStream(new File(targetFolder,
+                    event.getFile().getFileName()));
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = inputStream.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            inputStream.close();
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            imagefile = event.getFile().getInputstream();
+            file = event.getFile();
+            //bImageFromConvert = ImageIO.read(imagefile);
+            imageUrl = workingDir  + event.getFile().getFileName();
+            
+            BufferedImage image = ImageIO.read(imagefile);
+            byte[] bytes = IOUtils.toByteArray(imagefile);
+            System.out.println("THe handlg blyte array " + bytes);
+            //Blob blob = new SerialBlob(bytes);
+
+            imageIcon = new ImageIcon(image);
+
+        } catch (Exception ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        FacesMessage msg = new FacesMessage("Succesful: " + event.getFile().getFileName() + " is uploaded.");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+}

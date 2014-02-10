@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+    <!-- INTERFACE -->
+    <composite:interface>        
+        <composite:attribute name="header"/>        
+        <composite:attribute name="showUser"/>
+        <composite:attribute name="loginBean"/>
+    </composite:interface>
+
+    <!-- IMPLEMENTATION -->
+    <composite:implementation>
+
+        <h:form>
+            <p:layout id="layout" style="height: 60px">
+
+                <p:layoutUnit position="west" style="min-width:100px;" collapsible="false" resizable="false" closable="false" size="60">
+                    <h:commandLink action="/welcome">
+                        <h:graphicImage library="img" url="/resources/img/BubbleLogo.gif" width="70" height="50"/>
+                    </h:commandLink>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center" style="min-width:200px;text-align: center;" collapsible="false" resizable="false" closable="false" size="60">
+                    #{cc.attrs.header}
+
+                    <!--                        <p:layoutUnit position="east" styleClass="no-border">-->
+                    <h:panelGroup rendered="#{cc.attrs.showUser}">
+                        Welcome <h:outputText value="#{cc.attrs.loginBean.name}"/>!!!
+                    </h:panelGroup>
+                    <!--                        </p:layoutUnit>-->
+
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+
+    </composite:implementation>
+</html>

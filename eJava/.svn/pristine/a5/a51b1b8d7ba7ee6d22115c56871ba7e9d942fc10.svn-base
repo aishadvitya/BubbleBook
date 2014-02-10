@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"                
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:bb="http://java.sun.com/jsf/composite/bubbles"
+                template="/WEB-INF/templates/homeTemplate.xhtml">
+    <ui:define name="centerPane">
+        <ui:include src="/discussions.xhtml" />
+    </ui:define>
+
+    <ui:define name="rightPane" >
+        <ui:include src="#{discussionBean.bubblesSrc}" />
+    </ui:define>
+
+   <ui:define name="rightSearchPane">
+                <ui:include src="/BubbleSearch.xhtml"/>
+    </ui:define>
+    
+    <ui:define name="rightFloatPane">
+        <bb:profile title="My Profile"/>
+    </ui:define>
+
+    <p:ajaxStatus style="width:64px;height:64px;position:fixed;right:5px;bottom:5px">  
+        <f:facet name="start">  
+            <p:graphicImage value="/resources/img/ajax-loader.gif" />  
+        </f:facet>  
+
+        <f:facet name="complete">  
+            <h:outputText value="" />  
+        </f:facet>  
+    </p:ajaxStatus>
+</ui:composition>

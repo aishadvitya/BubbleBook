@@ -1,0 +1,186 @@
+/* 
+    Document   : bubbleStyleSheet
+    Created on : Oct 23, 2013, 1:19:45 AM
+    Author     : Naga
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.border{
+    border: 1px solid black;
+    width:100%;
+    height:100%;
+    
+}
+
+.bubble {
+    
+    
+  background-image: linear-gradient(bottom, rgb(145,211,247) 32%, rgb(231,245,228) 66%);
+background-image: -o-linear-gradient(bottom, rgb(145,211,247) 32%, rgb(231,245,228) 66%);
+background-image: -moz-linear-gradient(bottom, rgb(145,211,247) 32%, rgb(231,245,228) 66%);
+background-image: -webkit-linear-gradient(bottom, rgb(145,211,247) 32%, rgb(231,245,228) 66%);
+background-image: -ms-linear-gradient(bottom, rgb(145,211,247) 32%, rgb(231,245,228) 66%);
+
+background-image: -webkit-gradient(
+	linear,
+	left bottom,
+	left top,
+	color-stop(0.32, rgb(145,211,247)),
+	color-stop(0.66, rgb(231,245,228))
+);
+    
+    border-radius: 5px;
+    box-shadow: inset 0 1px 1px hsla(0,0%,100%,.5),
+                6px 6px 0 hsla(0,0%,0%,.1);
+    color: black;
+font: 9px Trebuchet MS bold;
+text-shadow: 0 1px 1px hsla(0,0%,100%,.7);
+    display: inline-block;
+    padding: 10px 10px;
+    position: relative;
+    text-shadow: 0 1px 1px hsla(0,0%,100%,.7);
+    width:fit-content;
+    max-height: 400px;
+    height:fit-content;
+    border-style:none;
+    border-color: lightblue;
+    border-radius: 8px;
+}
+.bubble:after, .bubble:before {
+    border-bottom: 25px solid transparent;
+    border-right: 25px solid rgb(145,211,247);
+    bottom: -25px;
+    content: '';
+    position: absolute;
+    right: 25px;   
+}
+.bubble:before {
+    border-right: 25px solid hsla(0,0%,0%,.2);
+    bottom: -28px;
+    right: 22px;
+}
+
+html,
+body,
+#bubbles { height: 100% }
+body { overflow: hidden }
+#bubbles { padding: 100px 0 }
+.bubble1 {
+    width: 60px;
+    height: 60px;
+    background: rgb(75,159,204) /*#ffb200*/;
+    border-radius: 200px;
+    -moz-border-radius: 200px;
+    -webkit-border-radius: 200px;
+    position: absolute;
+}
+
+.x1 {
+    -webkit-transform: scale(0.9);
+    -moz-transform: scale(0.9);
+    transform: scale(0.9);
+    opacity: 0.2;
+    -webkit-animation: moveclouds 15s linear infinite, sideWays 4s ease-in-out infinite alternate;
+    -moz-animation: moveclouds 15s linear infinite, sideWays 4s ease-in-out infinite alternate;
+    -o-animation: moveclouds 15s linear infinite, sideWays 4s ease-in-out infinite alternate;
+}
+
+.x2 {
+    left: 200px;
+    -webkit-transform: scale(0.6);
+    -moz-transform: scale(0.6);
+    transform: scale(0.6);
+    opacity: 0.5;
+    -webkit-animation: moveclouds 25s linear infinite, sideWays 5s ease-in-out infinite alternate;
+    -moz-animation: moveclouds 25s linear infinite, sideWays 5s ease-in-out infinite alternate;
+    -o-animation: moveclouds 25s linear infinite, sideWays 5s ease-in-out infinite alternate;
+}
+.x3 {
+    left: 350px;
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    transform: scale(0.8);
+    opacity: 0.3;
+    -webkit-animation: moveclouds 20s linear infinite, sideWays 4s ease-in-out infinite alternate;
+    -moz-animation: moveclouds 20s linear infinite, sideWays 4s ease-in-out infinite alternate;
+    -o-animation: moveclouds 20s linear infinite, sideWays 4s ease-in-out infinite alternate;
+}
+.x4 {
+    left: 470px;
+    -webkit-transform: scale(0.75);
+    -moz-transform: scale(0.75);
+    transform: scale(0.75);
+    opacity: 0.35;
+    -webkit-animation: moveclouds 18s linear infinite, sideWays 2s ease-in-out infinite alternate;
+    -moz-animation: moveclouds 18s linear infinite, sideWays 2s ease-in-out infinite alternate;
+    -o-animation: moveclouds 18s linear infinite, sideWays 2s ease-in-out infinite alternate;
+}
+.x5 {
+    left: 150px;
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    transform: scale(0.8);
+    opacity: 0.3; 
+    -webkit-animation: moveclouds 7s linear infinite, sideWays 1s ease-in-out infinite alternate;
+    -moz-animation: moveclouds 7s linear infinite, sideWays 1s ease-in-out infinite alternate;
+    -o-animation: moveclouds 7s linear infinite, sideWays 1s ease-in-out infinite alternate;
+}
+@-webkit-keyframes moveclouds { 
+    0% { 
+        top: 500px;
+    }
+    100% { 
+        top: -500px;
+    }
+}
+
+@-webkit-keyframes sideWays { 
+    0% { 
+        margin-left:0px;
+    }
+    100% { 
+        margin-left:50px;
+    }
+}
+
+@-moz-keyframes moveclouds {     
+    0% { 
+        top: 500px;
+    }
+
+    100% { 
+        top: -500px;
+    }
+}
+
+@-moz-keyframes sideWays {
+    0% {
+        margin-left:0px;
+    }
+    100% {
+        margin-left:50px;
+    }
+}
+@-o-keyframes moveclouds {
+    0% { 
+        top: 500px;
+    }
+    100% { 
+        top: -500px;
+    }
+}
+
+@-o-keyframes sideWays {
+    0% {
+        margin-left:0px;
+    }
+    100% {
+        margin-left:50px;
+    }
+}
+

@@ -1,0 +1,170 @@
+ /*Create Tables*/
+
+
+drop table ejava.BUBBLE_HIERARCHY;
+drop table ejava.BUBBLE_EMAIL;
+drop table ejava.BUBBLE_EVENT;
+drop table ejava.BUBBLE_AV;
+drop table ejava.BUBBLE_MAP;
+drop table ejava.BUBBLE_SURVEY;
+drop table ejava.BUBBLE;
+drop table ejava.DISCUSSION_PARTICIPANTS;
+drop table ejava.DISCUSSION;
+drop table ejava.BUBBLE_BOOK_USER_FRIENDS;
+drop table ejava.BUBBLE_BOOK_USER;
+drop table ejava.PKID_GEN_TABLE;
+
+create table "EJAVA".PKID_GEN_TABLE
+(
+	GEN_KEY VARCHAR(100) not null primary key,
+	GEN_VALUE NUMERIC(10)
+);
+
+create table "EJAVA".BUBBLE
+(
+	BUBBLE_ID INTEGER not null primary key,
+	USER_ID INTEGER not null,
+	CREATE_TIMESTAMP TIMESTAMP not null,
+	DISCUSSION_ID INTEGER not null,
+        BUBBLE_TYPE VARCHAR(50) not null,
+        BUBBLE_CONTENT VARCHAR(1000) not null
+);
+
+create table "EJAVA".BUBBLE_SURVEY
+(
+	BUBBLE_ID INTEGER not null primary key,
+	ANSWER1_COUNT DOUBLE default 0.0, 
+	ANSWER2_COUNT DOUBLE default 0.0,
+	ANSWER3_COUNT DOUBLE default 0.0,
+	ANSWER4_COUNT DOUBLE default 0.0,
+	ANSWER5_COUNT DOUBLE default 0.0,
+	ANSWER1 VARCHAR(50) not null,
+	ANSWER2 VARCHAR(50) not null,
+	ANSWER3 VARCHAR(50),
+	ANSWER4 VARCHAR(50),
+	ANSWER5 VARCHAR(50)
+);
+
+create table "EJAVA".BUBBLE_MAP
+(
+	BUBBLE_ID INTEGER not null primary key,
+	LOCATION_LAT DOUBLE,
+	LOCATION_LON DOUBLE,
+        PLACE VARCHAR(200) not null
+);
+
+create table "EJAVA".BUBBLE_AV
+(
+	BUBBLE_ID INTEGER not null primary key,
+	URL VARCHAR(200) not null
+);
+
+create table "EJAVA".BUBBLE_EVENT
+(
+	BUBBLE_ID INTEGER not null primary key, 
+	TITLE VARCHAR(50) not null,	
+	LOCATION_LAT DOUBLE,
+	LOCATION_LON DOUBLE,
+	STARTDATETIME TIMESTAMP not null,
+	ENDDATETIME TIMESTAMP not null,
+	MAYBE_COUNT INTEGER not null,
+	NOTGOING_COUNT INTEGER not null,
+	GOING_COUNT INTEGER not null
+);
+
+create table "EJAVA".BUBBLE_EMAIL
+(
+	BUBBLE_ID INTEGER not null primary key, 
+	SUBJECT VARCHAR(50) not null,
+        TO_ADDRESS VARCHAR(50) not null
+);
+
+create table "EJAVA".BUBBLE_BOOK_USER
+(
+	USER_ID INTEGER not null primary key,
+	NAME VARCHAR(100) not null,
+	PASSWORD VARCHAR(50) not null,
+	IMAGE_URL VARCHAR(100),
+	ABT_ME VARCHAR(500),
+        LAST_LOGON_TIME TIMESTAMP,
+	EMAIL VARCHAR(100) not null
+);
+
+create table "EJAVA".BUBBLE_BOOK_USER_FRIENDS
+(
+	USER_ID INTEGER not null,
+	FRIEND_USER_ID INTEGER not null
+);
+
+create table "EJAVA".BUBBLE_HIERARCHY
+(
+	BUBBLE_ID INTEGER not null primary key,
+	PARENT_BUBBLE_ID INTEGER
+);
+
+create table "EJAVA".DISCUSSION
+(
+	DISCUSSION_ID INTEGER not null primary key,
+	TITLE VARCHAR(200) not null,
+	DESCRIPTION VARCHAR(500) not null,
+	USER_ID INTEGER not null,
+	CREATE_TIMESTAMP TIMESTAMP not null
+);
+
+create table "EJAVA".DISCUSSION_PARTICIPANTS
+(	
+	DISCUSSION_ID INTEGER not null,
+        USER_ID INTEGER not null,
+        primary key (DISCUSSION_ID, USER_ID) 
+);
+
+
+/*Alter Tables*/          
+
+ALTER TABLE "EJAVA".bubble ADD CONSTRAINT bubble_user_id_FK
+Foreign Key (user_id) REFERENCES "EJAVA".bubble_book_user (user_id);
+
+ALTER TABLE "EJAVA".bubble ADD CONSTRAINT discussion_id_FK
+Foreign Key (discussion_id) REFERENCES "EJAVA".discussion (discussion_id);
+
+ALTER TABLE "EJAVA".BUBBLE_BOOK_USER ADD CONSTRAINT user_id_UNQ
+UNIQUE (EMAIL) ;
+
+ALTER TABLE "EJAVA".bubble_book_user_friends ADD CONSTRAINT user_id_FK
+Foreign Key (user_id) REFERENCES "EJAVA".bubble_book_user (user_id);
+
+ALTER TABLE "EJAVA".bubble_book_user_friends ADD CONSTRAINT user_friends_id_FK
+Foreign Key (friend_user_id) REFERENCES "EJAVA".bubble_book_user (user_id);
+
+ALTER TABLE "EJAVA".bubble_book_user_friends ADD CONSTRAINT user_id_friend_user_id_UNQ
+UNIQUE (USER_ID, FRIEND_USER_ID) ;
+
+ALTER TABLE "EJAVA".bubble_hierarchy ADD CONSTRAINT bubble_hierarchy_id_FK
+Foreign Key (bubble_id) REFERENCES "EJAVA".bubble (bubble_id);
+
+ALTER TABLE "EJAVA".bubble_hierarchy ADD CONSTRAINT bubble_parent_hierarchy_id_FK
+Foreign Key (parent_bubble_id) REFERENCES "EJAVA".bubble (bubble_id);
+
+ALTER TABLE "EJAVA".discussion ADD CONSTRAINT discussion_user_id_FK
+Foreign Key (user_id) REFERENCES "EJAVA".bubble_book_user (user_id);
+
+ALTER TABLE "EJAVA".discussion_participants ADD CONSTRAINT discussion_participants_id_FK
+Foreign Key (discussion_id) REFERENCES "EJAVA".discussion (discussion_id);
+
+ALTER TABLE "EJAVA".discussion_participants ADD CONSTRAINT participants_discussion_id_FK
+Foreign Key (user_id) REFERENCES "EJAVA".bubble_book_user (user_id);
+
+ALTER TABLE "EJAVA".bubble_survey ADD CONSTRAINT bubble_survey_id_FK
+Foreign Key (bubble_id) REFERENCES "EJAVA".bubble (bubble_id);
+
+ALTER TABLE "EJAVA".BUBBLE_EVENT ADD CONSTRAINT bubble_event_id_FK
+Foreign Key (bubble_id) REFERENCES "EJAVA".bubble (bubble_id);
+
+ALTER TABLE "EJAVA".BUBBLE_MAP ADD CONSTRAINT BUBBLE_MAP_id_FK
+Foreign Key (bubble_id) REFERENCES "EJAVA".bubble (bubble_id);
+
+ALTER TABLE "EJAVA".BUBBLE_AV ADD CONSTRAINT BUBBLE_AV_id_FK
+Foreign Key (bubble_id) REFERENCES "EJAVA".bubble (bubble_id);
+
+ALTER TABLE "EJAVA".BUBBLE_EMAIL ADD CONSTRAINT BUBBLE_EMAIL_id_FK
+Foreign Key (bubble_id) REFERENCES "EJAVA".bubble (bubble_id);

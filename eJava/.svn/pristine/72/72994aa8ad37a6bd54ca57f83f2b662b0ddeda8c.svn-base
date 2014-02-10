@@ -1,0 +1,36 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.ejb;
+
+import com.iss.bubble.entity.BubbleBookUser;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+/**
+ *
+ * @author Vincent
+ */
+@Stateless
+public class UserEJB {
+
+    @PersistenceContext
+    EntityManager em;
+
+    public BubbleBookUser findUserByID(Integer key) {
+        return em.find(BubbleBookUser.class, key);
+    }
+
+    public void saveBookUser(BubbleBookUser user) {
+        try {
+            System.out.println("Trying to persist BubbleBookUser " + user);
+            em.persist(user);
+        } catch (Exception e) {
+            System.err.println("Unable to persist BubbleBookUser " + user);
+            System.out.println(e.getMessage());
+        }
+
+    }
+}

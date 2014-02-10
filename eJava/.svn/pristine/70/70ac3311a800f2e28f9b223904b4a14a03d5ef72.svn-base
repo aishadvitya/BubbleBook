@@ -1,0 +1,88 @@
+/* 
+    Document   : mainStyle
+    Created on : Oct 24, 2013, 1:57:23 PM
+    Author     : Sathish
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.no-border{
+    border: 0px none transparent;
+}
+
+.no-overflow{
+    overflow: hidden;    
+}
+
+.leftPane{
+    width: 15%;height:auto;
+    text-align: center;
+}
+.rightPane{
+    width: 60%;
+    height:100%;
+    text-align: left;
+    vertical-align: top;
+}
+.centerPane{
+    width: 40%;
+    height:100%;
+    text-align: left;
+    vertical-align: top;
+}
+
+.leftPaneWelcome{
+    width: 30%;
+    height:600px;
+    vertical-align: top;
+    text-align: justify;
+    background-image: url("img/dummy_connecting.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-origin: border-box;
+}
+.rightPaneWelcome{
+    width: 40%;
+    height:600px;
+    vertical-align: top;
+    text-align: left;    
+}
+
+.loginLabel{
+    width: 30%;
+}
+
+.loginText{
+    width: 30%;
+}
+
+.loginMsg{
+    width: 30%;
+}
+
+.registerLabel{
+    width: 30%;
+    text-align: left;
+}
+
+.registerText{
+    width: 30%;
+    text-align: left;
+}
+
+.registerMsg{
+    width: 30%;
+    text-align: left;
+}
+
+#check{
+    padding-right: 5px;
+}
+
+.welcome-back-image{
+    background-image: url("#{resource['img:dummy_connecting.jpg']}");
+}

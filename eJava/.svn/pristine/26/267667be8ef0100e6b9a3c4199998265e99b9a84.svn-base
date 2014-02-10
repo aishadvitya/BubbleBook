@@ -1,0 +1,84 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.bean;
+
+import com.iss.bubble.ejb.BubbleEJB;
+import com.iss.bubble.ejb.DiscussionEJB;
+import com.iss.bubble.ejb.UserEJB;
+import com.iss.bubble.entity.Bubble;
+import com.iss.bubble.entity.BubbleBookUser;
+import com.iss.bubble.entity.BubbleMap;
+import com.iss.bubble.entity.Discussion;
+import java.util.Date;
+import javax.ejb.EJB;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
+
+/**
+ *
+ * @author Vincent
+ */
+@Named(value = "textBubble")
+@RequestScoped
+public class TextBubble {
+
+    /**
+     * Creates a new instance of TextBubble
+     */
+    @EJB
+    BubbleEJB bubbleEjb;
+    @EJB
+    DiscussionEJB discussionEjb;
+    @EJB
+    UserEJB userEjb;
+    private boolean editable;
+    private String text;
+
+    public boolean getEditable() {
+        return editable;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    public TextBubble() {
+
+        editable = true;
+
+    }
+
+    public void render() {
+        editable = true;
+    }
+
+    public void createEntityToPersist() {
+
+        //        Timestamp timestamp2 = new Timestamp(startDateTime.getTime());
+        //        Timestamp timestamp = new Timestamp(endDateTime.getTime());
+        Date date = new Date();
+        editable = false;
+        BubbleBookUser user = userEjb.findUserByID(1);
+        Discussion discussion = discussionEjb.findDiscussionByID(1);
+
+        Bubble be = new Bubble();
+        be.setBubbleContent(text);
+        be.setBubbleType("BUB_TEXT");
+        be.setCreateTimestamp(new Date());
+        be.setDiscussionId(discussion);
+        be.setUserId(user);
+
+        bubbleEjb.saveMap(be);
+
+    }
+}

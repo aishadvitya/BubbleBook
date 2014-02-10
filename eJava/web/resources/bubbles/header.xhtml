@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+    <!-- INTERFACE -->
+    <composite:interface>        
+        <composite:attribute name="header"/>        
+        <composite:attribute name="showUser"/>
+        <composite:attribute name="loginBean" type="com.iss.bubble.bean.LoginBean" required="true"/>
+    </composite:interface>
+
+    <!-- IMPLEMENTATION -->
+    <composite:implementation>
+
+        <h:form>
+            <p:layout id="layout" style="height: 60px">
+
+                <p:layoutUnit position="west" style="min-width:100px;" collapsible="false" resizable="false" closable="false" size="60">
+                    <h:commandLink action="/welcome">
+                        <h:graphicImage library="img" url="/resources/img/BubbleLogo.gif" width="50" height="40"/>
+                    </h:commandLink>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center" style="min-width:200px;" collapsible="false" resizable="false" closable="false" size="60">
+                    <h:panelGrid columns="2" columnClasses="center-align,right-align" style="">
+                        <p:outputLabel styleClass="center-align" value="#{cc.attrs.header}"/>
+
+                        <h:panelGroup rendered="#{cc.attrs.showUser}" style="font-size: small;margin-right: 10px; ">
+                            <!--                            <h:inputHidden value="{cc.attrs.loginBean.userAuthenticated}"/>-->
+                            Welcome <h:outputText value="#{request.remoteUser}"/>!!!<br/>
+                            <h:commandLink value="Logout" action="#{loginBean.logout()}"/>
+
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+
+    </composite:implementation>
+</html>

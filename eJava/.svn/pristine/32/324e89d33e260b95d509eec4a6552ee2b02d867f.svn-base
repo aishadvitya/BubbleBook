@@ -1,0 +1,68 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.entity;
+
+import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author Sathish
+ */
+@Entity
+@DiscriminatorColumn(name = "BUBBLE_TYPE")
+@DiscriminatorValue("SURVEY")
+@PrimaryKeyJoinColumn(name = "BUBBLE_ID")
+@Table(name = "BUBBLE_SURVEY", schema = "EJAVA")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "BubbleSurvey.findAll", query = "SELECT b FROM BubbleSurvey b")  
+})
+public class BubbleSurvey extends Bubble {
+
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Column(name = "SURVEY", nullable = false)
+    private Serializable survey;
+
+    public BubbleSurvey() {
+    }
+
+    public BubbleSurvey(Integer bubbleId) {
+        super(bubbleId);
+    }
+
+    @Override
+    public String toString() {
+        return "com.iss.bubble.entity.BubbleSurveyContent[ bubbleSurveyId=" + bubbleId + " ]";
+    }
+
+    public BubbleSurvey(Integer bubbleId, Serializable survey) {
+        this.bubbleId = bubbleId;
+        this.survey = survey;
+    }
+
+    public Serializable getSurvey() {
+        return survey;
+    }
+
+    public void setSurvey(Serializable survey) {
+        this.survey = survey;
+    }
+
+}

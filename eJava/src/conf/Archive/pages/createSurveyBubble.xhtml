@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"                
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+<!--    <head>
+        <title>Survey</title>
+    </head>-->
+    <body>
+        <h:form id="surveyForm">
+            
+            <h:outputLabel value="#{msg.question}"></h:outputLabel>
+            <h:inputText value="#{bubble.question}"></h:inputText>
+
+            <h:outputLabel value="Enter the Options"></h:outputLabel>
+            <ul>
+                <h:inputText value="#{bubble.answer1}"></h:inputText>
+                <h:inputText value="#{bubble.answer2}"></h:inputText>
+                <h:inputText value="#{bubble.answer3}"></h:inputText>
+            </ul>
+            <p:commandButton value="Submit" update="surveyForm"   
+                                 actionListener="#{bubble.save}" />  
+            
+        </h:form>
+    </body>
+</html>

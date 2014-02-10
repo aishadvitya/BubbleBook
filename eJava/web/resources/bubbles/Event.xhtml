@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <composite:interface>
+        <composite:attribute name="value" required="true" type="com.iss.bubble.entity.Bubble"/>
+
+
+    </composite:interface>
+
+    <composite:implementation>
+        <h:panelGroup id="viewPanelGroup" rendered="#{not empty cc.attrs.value.bubbleId}">
+                <h:panelGroup id="leftcol" layout="block" >
+                           <h3>Event title</h3>  <p:inplace id="ajaxInplace2" editor="#{cc.attrs.value.userId.email eq request.remoteUser}" event="dblclick" >  
+
+                        <p:ajax event="save" listener="#{discussionBean.saveEditedBubble(cc.attrs.value)}" update="@form"/>
+                        <p:ajax event="cancel" listener="#{discussionBean.CancelEdit(cc.attrs.value)}" update="@form"/>
+                        <p:inputText value="#{cc.attrs.value.title}" >
+                        </p:inputText>
+                    </p:inplace>
+                           <h3>Event description</h3>  <p:inplace id="ajaxInplace1" editor="#{cc.attrs.value.userId.email eq request.remoteUser}" event="dblclick" >  
+
+                        <p:ajax event="save" listener="#{discussionBean.saveEditedBubble(cc.attrs.value)}" update="@form"/>
+                        <p:ajax event="cancel" update="@form"/>
+                        <p:inputText value="#{cc.attrs.value.bubbleContent}" >
+                        </p:inputText>
+                    </p:inplace>              
+                                          
+                </h:panelGroup>
+            <h:panelGroup id="rightcol" layout="block" >
+                <h3>Start DateTime</h3>
+                <p:outputLabel value="#{cc.attrs.value.startdatetime}"/> 
+                        <h3>End DateTime</h3>
+                        <p:outputLabel value="#{cc.attrs.value.enddatetime}"/> 
+           </h:panelGroup> 
+           <h:panelGroup layout="block">
+          <h:outputText value="Please respond" />    
+          <br/>
+          <p:selectOneRadio id="optional" value="#{cc.attrs.value.response}">  
+                   <f:selectItem itemLabel="Going" itemValue="1" />  
+                   <f:selectItem itemLabel="Not Going" itemValue="2" />  
+                   <f:selectItem itemLabel="Maybe" itemValue="3" />  
+          </p:selectOneRadio>  
+         <h:panelGroup layout="block">
+             <p:commandButton id="cjeck" value="Submit Response" actionListener="#{eventBubble.respond(cc.attrs.value)}" update="myPanel" >
+                
+             </p:commandButton>
+          </h:panelGroup>      
+           <h:panelGroup layout="block" id="myPanel">
+          <h:outputText value="Going count"/> :    
+          <p:outputLabel id="Going" value="#{cc.attrs.value.goingCount}"/>  
+           | <h:outputText value="Not going count" /> : 
+          <p:outputLabel id="NotGoing" value="#{cc.attrs.value.notgoingCount}"/>  
+           | <h:outputText value="MayBe count" /> : 
+          <p:outputLabel id="Maybe" value="#{cc.attrs.value.maybeCount}"/>  
+          </h:panelGroup>    
+          </h:panelGroup>
+    <p:separator />
+        <h:graphicImage id="img" library="temp" url="/resources/temp/#{b.userId.imageUrl}" width="30" height="30">
+                <p:tooltip for="img" value="#{cc.attrs.value.userId.name}"/>
+            </h:graphicImage>
+            <p:outputLabel value="#{cc.attrs.value.createTimestamp}">
+                <f:convertDateTime pattern="EEE, MMM, dd, yyyy HH:mm" />
+            </p:outputLabel>
+     </h:panelGroup>
+        <h:panelGroup id="createText" rendered="#{empty cc.attrs.value.bubbleId}">
+                       <h:panelGroup id="leftcol1" layout="block" >
+                      <h3>Event title</h3>  <p:inputText id="event_name1" value="#{discussionBean.eventBubble.title}"></p:inputText>
+                      <h3>Event description</h3> <p:inputTextarea id="event_desc1" value="#{discussionBean.eventBubble.bubbleContent}"></p:inputTextarea>                
+
+                      </h:panelGroup>
+                     <h:panelGroup id="rightcol1" layout="block" >
+                           <h3>Start DateTime</h3>
+                           <p:calendar value="#{discussionBean.eventBubble.startdatetime}" pattern="MM/dd/yyyy HH:mm"  
+                              minHour="3" maxHour="18"/> 
+                               <h3>End DateTime</h3>
+                               <p:calendar value="#{discussionBean.eventBubble.enddatetime}" pattern="MM/dd/yyyy HH:mm"  
+                              minHour="3" maxHour="18"/> 
+                    </h:panelGroup> 
+                 <h:panelGroup layout="block" id="try">
+                     
+                     <p:commandButton value="Submit" update=":bubblesForm:treetable" action="#{discussionBean.createBubble()}"></p:commandButton>
+                      <p:commandButton value="Cancel" action="#{discussionBean.cancelBubble()}" update=":bubblesForm:treetable"/>
+                 </h:panelGroup> 
+
+        </h:panelGroup>
+
+    </composite:implementation>
+</html>
+

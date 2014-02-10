@@ -1,0 +1,70 @@
+--SCripts for security
+ create table "EJAVA".GROUPS_ROLE
+(
+ 	GROUP_ID INTEGER not null primary key GENERATED ALWAYS AS IDENTITY,
+        GROUP_ROLE varchar(50) not null,
+        GROUP_DESC varchar(100)
+);
+
+CREATE TABLE "EJAVA".USER_GROUP(
+    GROUP_ID INTEGER NOT NULL,
+    USER_ID INTEGER NOT NULL,
+    PRIMARY KEY (GROUP_ID,USER_ID)
+);
+
+ ALTER TABLE "EJAVA".USER_GROUP ADD CONSTRAINT user_group_user_id_FK
+ Foreign Key (USER_ID) REFERENCES "EJAVA".bubble_book_user (user_id);
+ 
+ ALTER TABLE "EJAVA".USER_GROUP ADD CONSTRAINT user_group_group_id_FK
+ Foreign Key (GROUP_ID) REFERENCES "EJAVA".GROUPS_ROLE (GROUP_ID);
+
+
+
+INSERT  INTO "EJAVA".GROUPS_ROLE(GROUP_ROLE,GROUP_DESC) VALUES
+  ('USER','Regular users'),
+  ('ADMIN','Administration users'),
+  ('USER','Premium users');
+   
+
+INSERT  INTO "EJAVA".USER_GROUP(USER_ID,GROUP_ID) VALUES (1,1),(2,1),(3,1),(4,1),(5,1),(6,2);
+
+
+CREATE VIEW "EJAVA".v_user_role AS 
+    SELECT  u.EMAIL, u.password, g.GROUP_ROLE
+ 
+    FROM  "EJAVA".USER_GROUP ug
+ 
+        INNER JOIN "EJAVA".BUBBLE_BOOK_USER u ON u.USER_ID = ug.USER_ID
+ 
+        INNER JOIN "EJAVA".GROUPS_ROLE g ON g.GROUP_ID =  ug.GROUP_ID;
+
+
+-- FOR USER_GROUP
+-- @ManyToMany
+-- @JoinTable(name="USER_GROUP_MAPPING"
+-- joinColumns=@JoinColumn(name="GROUP_ID",
+-- referencedColumnName="groupId")
+-- inverseJoinColumns=@JoinColumn(name="USER_ID",
+-- referencedColumnName="userId")
+-- Collection<BubbleBookUser> users;
+
+-- 
+-- @Entity
+-- bubble_book_user
+-- @ManyToMany(mappedBy="users")
+-- Collection<UserGroup> userGroups;
+
+
+-- 
+-- @Entity 
+-- user_group
+-- @oneToOne
+-- private UserRole role;
+
+-- 
+-- @Entity
+-- USER_ROLE
+-- @OneToOne(mappedBy=role)
+-- private UserGroup group;
+
+

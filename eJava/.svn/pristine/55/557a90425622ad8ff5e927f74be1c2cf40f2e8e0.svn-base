@@ -1,0 +1,93 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.ejb;
+
+import com.iss.bubble.entity.BubbleBookUser;
+import java.util.List;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+/**
+ *
+ * @author Sathish
+ */
+@Stateless
+public class UserEJB {
+
+    @PersistenceContext
+    EntityManager em;
+
+    public List<BubbleBookUser> getAllUsers() {
+        Query queryForAllUsers = em.createNamedQuery("BubbleBookUser.findAll");
+        return (List<BubbleBookUser>) queryForAllUsers.getResultList();
+    }
+
+    public BubbleBookUser findUserByID(Integer key) {
+        return em.find(BubbleBookUser.class, key);
+    }
+
+    public boolean emailExists(String email) {
+
+        List<BubbleBookUser> results = em.createNamedQuery("BubbleBookUser.findByEmail").setParameter("email", email).getResultList();
+        if (results.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+     public BubbleBookUser findUserByEmail(String email) {
+        List<BubbleBookUser> results = em.createNamedQuery("BubbleBookUser.findByEmail").setParameter("email", email).getResultList();
+        if (results == null) {
+            return null;
+        } else {
+            return results.get(0);
+        }
+    }
+     
+    public BubbleBookUser isAuthenticated(String email, String password) {
+
+        List<BubbleBookUser> results = em.createNamedQuery("BubbleBookUser.findByEmail").setParameter("email", email).getResultList();
+
+        if (results.isEmpty()) {
+            System.err.println("Unable to find email id " + email);
+            return null;
+        } else {
+            BubbleBookUser user = results.get(0);
+            if (user.getPassword().equals(password)) {
+                System.out.println("Email, password authenticated. " + email);
+                return user;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public Boolean saveBookUser(BubbleBookUser user) {
+        try {
+            System.out.println("Trying to persist BubbleBookUser " + user);
+            em.persist(user);
+            return true;
+        } catch (Exception e) {
+            System.err.println("Unable to persist BubbleBookUser " + user);
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public List<BubbleBookUser> retrieveFriendUsersByUserID(Integer key) {
+        //String queryString = "select ";
+        //TypedQuery<BubbleBookUser> query =  em.createQuery(queryString,BubbleBookUser.class, key);
+        BubbleBookUser bbUser = findUserByID(key);
+        for (BubbleBookUser bbUser1 : bbUser.getBubbleBookUserCollection()) {
+            System.out.println("INSIDE 1 :" + bbUser1.toString());
+        }
+        for (BubbleBookUser bbUser2 : bbUser.getBubbleBookUserCollection1()) {
+            System.out.println("INSIDE 2 :" + bbUser2.toString());
+        }
+        return (List<BubbleBookUser>) bbUser.getBubbleBookUserCollection1();
+    }
+}

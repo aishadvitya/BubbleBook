@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"                
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:bb="http://java.sun.com/jsf/composite/bubbles"
+                template="masterLayout.xhtml">
+    <ui:define name="top">
+        <p:layoutUnit position="north" collapsible="false" resizable="false" closable="false" size="80">
+            <bb:header header="#{msg.title}" loginBean="#{loginBean}" showUser="true" />
+            
+        </p:layoutUnit>
+    </ui:define>
+    <ui:define name="center">
+        <p:layoutUnit position="center" collapsible="false" resizable="false" closable="false" size="300">
+            <h:panelGrid id="homeGrid" columns="3" columnClasses="homeLeftPane,homeCenterPane,centerPane" width="100%">
+
+
+                <h:panelGroup id="homeCenterPG">
+                    <ui:insert name="centerPane"/>
+                </h:panelGroup>
+
+                <h:panelGroup id="homeRightPG">
+                    <ui:insert name="rightPane"/>
+                </h:panelGroup>
+                
+                 <h:panelGroup id="rightSearchBubbles">
+                    <ui:insert name="rightSearchPane"/>
+                </h:panelGroup>
+                
+            </h:panelGrid>
+        </p:layoutUnit>
+
+<!--        <p:layoutUnit  position="west" size="400" header="Profile" resizable="true" closable="false" collapsible="true">
+            <ui:insert name="leftFloatPane"/>
+        </p:layoutUnit>-->
+
+        <p:layoutUnit  position="east" size="400" header="My Profile" resizable="true" closable="false" collapsible="true">
+            <ui:insert name="rightFloatPane"/>
+        </p:layoutUnit>
+
+    </ui:define>
+</ui:composition>

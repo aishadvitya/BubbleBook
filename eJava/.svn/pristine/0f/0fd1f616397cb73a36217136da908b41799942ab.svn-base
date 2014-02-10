@@ -1,0 +1,189 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.bean;
+
+import com.iss.bubble.ejb.BubbleEJB;
+import com.iss.bubble.entity.Bubble;
+import com.iss.bubble.entity.BubbleHierarchy;
+import com.iss.bubble.entity.Discussion;
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+/**
+ *
+ * @author Sathish
+ */
+@Named
+@SessionScoped
+public class DiscussionBean implements Serializable {
+    
+    @EJB BubbleEJB bubbleejb;
+    HashMap<Bubble,List<Bubble>> hm;
+    private TreeNode root;
+
+    public TreeNode getRoot() {
+        return root;
+    }
+
+    public void setRoot(TreeNode root) {
+        this.root = root;
+    }
+    
+    public DiscussionBean() {
+    }
+
+    @PostConstruct
+    public void initDiscs() {
+        
+        Collection<Bubble> lstBubbles=new ArrayList<>();
+               lstBubbles =bubbleejb.retrieveBubbles(1);
+
+   
+               hm=new HashMap<>();
+                for(Bubble bu: lstBubbles){
+                        List<BubbleHierarchy> lst= (List<BubbleHierarchy>)bu.getBubbleHierarchyCollection();
+                        List<Bubble> lstChildren=new ArrayList<Bubble>();
+                    for(BubbleHierarchy l:lst){               
+                             lstChildren.add(l.getBubble());
+                        }
+                       hm.put(bu, lstChildren);                        
+                     System.out.println(bu.toString());        
+                }
+                
+                
+                System.out.println("Aish"+hm.size());
+                ArrayList<TreeNode> bubbleTree=new ArrayList<>();
+                
+                  root = new DefaultTreeNode("root", null);
+                  TreeNode tn; 
+                      
+                      ArrayList<TreeNode> bubb=new ArrayList<>();
+                if(null!=hm){
+                for (Bubble b : hm.keySet()) {
+           System.out.println(b);
+                        if(null==b.getBubbleHierarchy())
+                             { 
+                                  bubbleTree.add(new DefaultTreeNode(b,root));
+                                    
+                             } 
+
+                        
+                          }  
+                     
+                System.out.println("Aishhh"+root.getChildCount());                
+                    }
+                
+                
+                
+                            for(TreeNode newTn: bubbleTree){
+                                        Bubble c=(Bubble)newTn.getData();
+                                        List<Bubble> lst=(List<Bubble>)hm.get(c);
+                                        System.out.println("Ashhhh"+c+"     "+hm.get(c).get(0));
+                                        for(Bubble bs:lst){
+                                            bubb.add(new DefaultTreeNode(bs,newTn));
+                                        }                
+                                    }      
+                        
+                  bubbleTree.addAll(bubb);
+//        discussions = new ArrayList<>();
+//        discussions.add(new Discussion(1, "Annual General Meet up", "Desc", new Timestamp(new Date(12, 5, 10).getTime())));
+//        discussions.add(new Discussion(1, "Party celeb", "Description", new Timestamp(new Date(2, 3, 13).getTime())));
+//        discussionsModel = new DiscussionDataModel(discussions);
+//        bubblesSrc = "/bubbles.xhtml";
+    }
+    
+    private String bubblesSrc = "/bubbles.xhtml";
+    private List<Discussion> discussions;
+    private DiscussionDataModel discussionsModel;
+    private Discussion selectedDiscussion;
+    private List<Bubble> bubbles;
+
+    public DiscussionDataModel getDiscussionsModel() {
+        return discussionsModel;
+    }
+
+    public void setDiscussionsModel(DiscussionDataModel discussionsModel) {
+        this.discussionsModel = discussionsModel;
+    }
+
+    public List<Bubble> getBubbles() {
+        return bubbles;
+    }
+
+    public void setBubbles(List<Bubble> bubbles) {
+        this.bubbles = bubbles;
+    }
+
+    public Discussion getSelectedDiscussion() {
+        return selectedDiscussion;
+    }
+
+    public void setSelectedDiscussion(Discussion selectedDiscussion) {
+        this.selectedDiscussion = selectedDiscussion;
+    }
+
+    public List<Discussion> getDiscussions() {
+        return discussions;
+    }
+
+    public void createNewDiscussion() {
+        bubblesSrc ="/newDiscussion.xhtml";
+    }
+
+    public void onRowToggle(ToggleEvent event) {
+        //Fetch the Paticipants Images
+        //on expansion
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                "Discussion view",
+                "Title:" + ((Discussion) event.getData()).getTitle());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void onRowSelect(SelectEvent event) {
+        //based on the discussion Id
+        // Fetch the Bubbles
+        
+        bubbles = new ArrayList<>();
+        System.out.println("inside onrowselect");
+        bubblesSrc = "/bubbles.xhtml";
+        //bubbles.add(new Bubble(new Timestamp(new Date(1923, 1, 12).getTime()),"MAP","content"));
+        FacesMessage msg = new FacesMessage("Discussion Selected", ((Discussion) event.getObject()).getTitle());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void onRowUnselect(UnselectEvent event) {
+        
+        FacesMessage msg = new FacesMessage("Discussion Unselected", ((Discussion) event.getObject()).getTitle());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void setDiscussions(List<Discussion> discussions) {
+        this.discussions = discussions;
+    }
+
+    public String getBubblesSrc() {
+        return bubblesSrc;
+    }
+
+    public void setBubblesSrc(String bubblesSrc) {
+        this.bubblesSrc = bubblesSrc;
+    }
+}

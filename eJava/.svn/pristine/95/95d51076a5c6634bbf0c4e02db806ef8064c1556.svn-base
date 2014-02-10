@@ -1,0 +1,159 @@
+package com.iss.bubble.bean;
+
+import com.iss.bubble.entity.BubbleEvent;
+import java.awt.Point;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
+import javax.jms.Queue;
+import javax.jms.Session;
+import org.primefaces.model.chart.CartesianChartModel;
+import org.primefaces.model.chart.ChartSeries;
+
+@Named
+@ViewScoped
+public class EventBubble {
+    //   @EJB EventBubbleEJB eventEjb;
+
+    CartesianChartModel categoryModel;
+    @Resource(mappedName = "jms/connectionFactory")
+    private ConnectionFactory connectionFactory;
+    @Resource(mappedName = "jms/warehouseQueue")
+    private Queue warehouseQueue;
+    String eventTitle;
+    String eventDesc;
+    Date startDateTime;
+    Date endDateTime;
+    int goingCount;
+    int mayBeCount;
+    int notGoing;
+    Point latLong;
+    String response;
+    Boolean show;
+
+    public boolean isShow() {
+        return show;
+    }
+
+    public void setShow(boolean show) {
+        show = true;
+    }
+
+    public EventBubble() {
+        createCategoryModel();
+    }
+
+    public CartesianChartModel getCategoryModel() {
+        return categoryModel;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
+    }
+
+    public String getEventTitle() {
+        return eventTitle;
+    }
+
+    public void setEventTitle(String eventTitle) {
+        this.eventTitle = eventTitle;
+    }
+
+    public String getEventDesc() {
+        return eventDesc;
+    }
+
+    public void setEventDesc(String eventDesc) {
+        this.eventDesc = eventDesc;
+    }
+
+    public Date getStartDateTime() {
+        return startDateTime;
+    }
+
+    public void setStartDateTime(Date startDateTime) {
+        this.startDateTime = startDateTime;
+    }
+
+    public Date getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setEndDateTime(Date endDateTime) {
+        this.endDateTime = endDateTime;
+    }
+
+    public int getGoingCount() {
+        return goingCount;
+    }
+
+    public void setGoingCount(int goingCount) {
+        this.goingCount = goingCount;
+    }
+
+    public int getMayBeCount() {
+        return mayBeCount;
+    }
+
+    public void setMayBeCount(int mayBeCount) {
+        this.mayBeCount = mayBeCount;
+    }
+
+    public int getNotGoing() {
+        return notGoing;
+    }
+
+    public void setNotGoing(int notGoing) {
+        this.notGoing = notGoing;
+    }
+
+    public Point getLatLong() {
+        return latLong;
+    }
+
+    public void setLatLong(Point latLong) {
+        this.latLong = latLong;
+    }
+
+    private void createCategoryModel() {
+        categoryModel = new CartesianChartModel();
+        ChartSeries eventUpdate = new ChartSeries();
+        eventUpdate.setLabel("response");
+        eventUpdate.set("Going", 52);
+        eventUpdate.set("Not Going", 60);
+        eventUpdate.set("Maybe", 110);
+        categoryModel.addSeries(eventUpdate);
+    }
+
+    public void createEntityToPersist() {
+        try {
+            //        Timestamp timestamp2 = new Timestamp(startDateTime.getTime());
+            //        Timestamp timestamp = new Timestamp(endDateTime.getTime());
+            //BubbleEvent be = new BubbleEvent(eventTitle, eventDesc, 23456, startDateTime, endDateTime, 10, 10, 10, startDateTime);
+            Connection conn = connectionFactory.createConnection();
+            try (Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
+                MessageProducer producer = session.createProducer(warehouseQueue);
+                ObjectMessage message = session.createObjectMessage();
+                message.setBooleanProperty("rush", true);
+                //message.setObject(be);
+                producer.send(message);
+            }
+            //   eventEjb.saveEvent(be);
+            show = false;
+        } catch (JMSException ex) {
+            Logger.getLogger(EventBubble.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+}

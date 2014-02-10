@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Event Bubble</title>
+    </h:head>
+    
+    <h:body>
+         <h:outputStylesheet library="css" name="styles.css"/>
+         <input type="hidden" name="diplay" value="create" />
+         <h:form id="form2" rendered="#{!empty eventBubble.endDateTime}">
+              <h:panelGrid columns="3" headerClass="list-header"
+    rowClasses="list-row-even, list-row-odd"
+    styleClass="bubble"   >   
+                  
+                 <h:panelGroup id="leftcol" layout="block" >
+                     <h3>Event title</h3>  <p:outputLabel id="event_name" value="#{eventBubble.eventTitle}"></p:outputLabel>
+                    <h3>Event description</h3> <p:outputLabel id="event_desc" value="#{eventBubble.eventDesc}"></p:outputLabel>                
+                    
+               </h:panelGroup>
+     
+         <h:panelGroup id="rightcol" layout="block" >
+                <h3>Start DateTime</h3>
+                <p:outputLabel value="#{eventBubble.startDateTime}"/> 
+                        <h3>End DateTime</h3>
+         <p:outputLabel value="#{eventBubble.endDateTime}"/> 
+        
+          </h:panelGroup> 
+                <h:panelGroup layout="block">
+          <h:outputText value="Your response" />    
+        <p:outputLabel id="options" value="#{eventBubble.response}"/>  
+                           
+                  <p:commandLink id="chartBtn" value="Response Stats" type="button"/> 
+                <p:overlayPanel id="chartPanel" for="chartBtn" hideEffect="fade">  
+                    <p:barChart id="horizontal" value="#{eventBubble.categoryModel}" style="width:150px;height:150px"  
+            title="Horizontal Bar Chart" orientation="horizontal" min="0" max="200"/>  
+    </p:overlayPanel> 
+       </h:panelGroup>           
+     </h:panelGrid>  
+         </h:form>
+         <h:form id="form1" rendered="#{empty eventBubble.eventDesc}">    
+            
+                
+             <h:panelGrid columns="3" headerClass="list-header"
+    rowClasses="list-row-even, list-row-odd"
+    styleClass="bubble"   >   
+                 <h:panelGroup id="leftcol" layout="block" >
+                     <h3>Event title</h3>  <p:inputText id="event_name" value="#{eventBubble.eventTitle}"></p:inputText>
+                    <h3>Event description</h3> <p:inputTextarea id="event_desc" value="#{eventBubble.eventDesc}"></p:inputTextarea>                
+                    <h:commandButton value="Submit" action="#{eventBubble.createEntityToPersist}"/>
+               </h:panelGroup>
+     
+         <h:panelGroup id="rightcol" layout="block" >
+                <h3>Start DateTime</h3>
+                      <p:calendar value="#{eventBubble.startDateTime}" pattern="MM/dd/yyyy HH:mm"  
+                minHour="3" maxHour="18"/> 
+                        <h3>End DateTime</h3>
+         <p:calendar value="#{eventBubble.endDateTime}" pattern="MM/dd/yyyy HH:mm"  
+                minHour="9" maxHour="18"/> 
+        
+          </h:panelGroup> 
+                <h:panelGroup layout="block">
+          <h:outputText value="Your response" />    
+        <p:selectOneRadio id="options" value="#{eventBubble.response}">  
+            <f:selectItem itemLabel="Going" itemValue="1" />  
+            <f:selectItem itemLabel="Not Going" itemValue="2" />  
+            <f:selectItem itemLabel="Maybe" itemValue="3" />  
+        </p:selectOneRadio>  
+                           
+                  <p:commandLink id="chartBtn" value="Response Stats" type="button"/> 
+                <p:overlayPanel id="chartPanel" for="chartBtn" hideEffect="fade">  
+                    <p:barChart id="horizontal" value="#{eventBubble.categoryModel}" style="width:150px;height:150px"  
+            title="Horizontal Bar Chart" orientation="horizontal" min="0" max="200"/>  
+    </p:overlayPanel> 
+       </h:panelGroup>           
+     </h:panelGrid>  
+    </h:form>
+    </h:body>
+</html>
+

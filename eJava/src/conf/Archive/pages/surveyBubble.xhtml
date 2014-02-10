@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Survey Bubble</title>
+        <link type="text/css" rel="stylesheet" href="/banking/faces/javax.faces.resource/primefaces.css?ln=primefaces&amp;v=4.0" />
+<script type="text/javascript" src="/banking/faces/javax.faces.resource/jquery/jquery-plugins.js?ln=primefaces&amp;v=4.0"></script>
+
+    </h:head>
+    <h:body>
+        <h:form id="survey1">
+         <h:outputStylesheet library="css" name="styles.css"/>
+        <h:panelGrid columns="1" styleClass="bubble" id="check"  rendered="#{!surveyBubbleBean.isPersist}">
+                <br/>
+                <h:panelGroup layout="block">
+                <p:outputLabel value="Question"/>
+                <p:inputTextarea value="#{surveyBubbleBean.bubble.bubbleContent}"/>
+                </h:panelGroup>
+                <br/>
+                <h:message for="ansPanel"/>
+                <h:panelGroup layout="block" id="ansPanel">
+                Response:      
+                  <ui:repeat value="#{surveyBubbleBean.bubble.answers}" varStatus="status" var="current" id="repeat">            
+                        <h:inputText value="#{current}" />
+                        <br/>
+                  </ui:repeat>
+                  <h:inputText value="#{surveyBubbleBean.bubble.response}"/>
+                     <p:commandButton value="Add" actionListener="#{surveyBubbleBean.addOne}" update="ansPanel"/>
+                     <p:commandButton value="Save" actionListener="#{surveyBubbleBean.done}" update="survey1"/>
+                </h:panelGroup>
+        
+<h:messages/>    
+        </h:panelGrid>
+        <h:panelGrid columns="1" styleClass="bubble" id="check1"  rendered="#{surveyBubbleBean.isPersist}">
+        
+           <h:panelGroup layout="block">
+                <p:outputLabel value="Question"/>
+                <p:inputTextarea value="#{surveyBubbleBean.bubble.bubbleContent}"/>
+                </h:panelGroup>
+          <h:panelGroup layout="block" id="ansPanel1">
+            <p:selectOneRadio id="optional" value="#{surveyBubbleBean.bubble.response}">  
+                   <f:selectItem itemLabel="#{surveyBubbleBean.bubble.answer1}" itemValue="1"/>
+                   <f:selectItem itemLabel="#{surveyBubbleBean.bubble.answer2}" itemValue="2"/>  
+                   <f:selectItem itemLabel="#{surveyBubbleBean.bubble.answer3}" itemValue="3" rendered="#{!empty surveyBubbleBean.bubble.answer3Count}"/>  
+                   <f:selectItem itemLabel="#{surveyBubbleBean.bubble.answer4}" itemValue="4" rendered="#{!empty surveyBubbleBean.bubble.answer4Count}"/>  
+                   <f:selectItem itemLabel="#{surveyBubbleBean.bubble.answer5}" itemValue="5" rendered="#{!empty surveyBubbleBean.bubble.answer5Count}"/>  
+            </p:selectOneRadio>    
+              <p:commandButton value="submit response"   actionListener="#{surveyBubbleBean.updateResponse()}"/>
+              <p:commandLink id="chartBtn" value="Response Stats" type="button" action="#{surveyBubbleBean.createPieModel}"/> 
+    <p:overlayPanel id="chartPanel" for="chartBtn" hideEffect="fade">  
+         <p:pieChart id="custom" value="#{surveyBubbleBean.pieModel}" legendPosition="e" fill="false" showDataLabels="true"  
+                title="Custom Options" style="width:400px;height:300px" sliceMargin="0" diameter="150" /> 
+    </p:overlayPanel> 
+     </h:panelGroup>           
+            
+              </h:panelGrid>
+                 </h:form>
+        
+        
+        
+         
+        </h:body>
+
+</html>

@@ -1,0 +1,63 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation>
+        <ui:define name="title">BubbleApp Login</ui:define>
+
+
+        <form id="loginForm" method="POST" action="j_security_check">
+
+            <p:fieldset legend="Login" style="width: 100%">
+
+                <hr/>
+                <p:messages for="loginPG"/>  
+
+                <h:panelGrid columns="3" columnClasses="loginLabel, loginText, loginMsg " id="loginPG">
+                    Email: 
+                    <!--                    <p:inputText id="email"
+                                                               value="{loginBean.email}" size="20" 
+                                                               required="true" 
+                                                               maxlength="100"
+                                                               requiredMessage="Please enter your eamil"
+                                                               validatorMessage="Email should have 1-100 chars."/>
+                    
+                                        <p:message id="email_error" for="email" />-->
+                    <input type="text" name="j_username" />
+
+
+                    Password: 
+                    <!--                    <p:password id="password"
+                                                    value="{loginBean.password}"
+                                                    size="20"
+                                                    required="true"
+                                                    requiredMessage="Please enter your password"
+                                                    validatorMessage="Password should have 1-100 chars."/>
+                                        <p:message id="password_error" for="password" />-->
+                    <input type="password" name="j_password" />
+
+                </h:panelGrid>
+                <hr />
+
+                <h:panelGrid columns="2">
+
+                    <!--                    <p:commandButton value="Login" action="{loginBean.login}" ajax="false"                                
+                                                         process="@form"
+                                                         update=":welcomeRightPG"/>
+                                        
+                    
+                                        <p:commandButton value="SignUp" actionListener="{loginBean.showRegister}" immediate="true"                                 
+                                                         update=":welcomeRightPG"/>-->
+                    <input type="submit" value="Login" class="html-primefaces-theme-comp"/>
+                     <input type="reset" value="Reset" class="html-primefaces-theme-comp"/>
+                </h:panelGrid>
+
+            </p:fieldset>
+        </form>
+    </composite:implementation>
+</html>

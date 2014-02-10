@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:head>
+        <title>New Discussion</title>
+    </h:head>
+    <h:form id="newDiscussionForm">
+        <p:growl id="growl" showDetail="true"/>
+        <h:panelGrid columns="2"  style="width:300px;">
+            <!--            <h:panelGroup>-->
+            <h:outputText value="Title:" />
+            <h:inputText id="title" value="#{discussionBean.selectedDiscussion.title}" />
+            <!--            </h:panelGroup>-->
+
+            <h:outputText value="Description:" />
+            <h:inputTextarea value="#{discussionBean.selectedDiscussion.description}" />
+
+            <p:commandButton value="Select Participants" update="display" oncomplete="PF('dlg').show()"/>            
+            <p:dialog widgetVar="dlg" modal="true" appendToBody="true">  
+                <h:panelGrid id="display" columns="3" cellpadding="2">  
+                    <p:selectManyMenu id="scroll" value="#{contactsBean.selectedContacts}" converter="contact" style="width:150px;height:200px" var="c" showCheckbox="true">  
+                        <f:selectItems value="#{contactsBean.myContacts}" var="cntct" itemLabel="#{cntct.name}" itemValue="#{cntct}" />  
+
+                        <p:column>  
+                            <p:graphicImage value="#{c.imageUrl}" width="40"/>  
+                        </p:column>  
+
+                        <p:column>  
+                            #{c.name}
+                        </p:column>  
+                    </p:selectManyMenu>
+                    
+                    <p:commandButton value="Done" oncomplete="PF('dlg').close()">
+                        <f:ajax  listener="#{discussionBean.saveToDiscussion()}"/>
+                    </p:commandButton>
+                </h:panelGrid>
+            </p:dialog>
+
+        </h:panelGrid>
+        <p:commandButton value="Submit" action="#{discussionBean.createNewDiscussion()}" process="@form" update=":homeGrid"/>
+    </h:form>
+</html>

@@ -1,0 +1,64 @@
+--SCripts for security
+ create table "EJAVA".USER_GROUP
+(
+ 	GROUP_ID INTEGER not null primary key,
+         GROUP_NAME varchar(50) not null,
+        USER_ID INTEGER not null
+);
+
+
+
+ALTER TABLE "EJAVA".USER_GROUP ADD CONSTRAINT user_group_discussions
+Foreign Key (user_id) REFERENCES "EJAVA".bubble_book_user (user_id);
+
+
+CREATE TABLE "EJAVA".USER_ROLE(
+GROUP_ID INTEGER NOT NULL,
+ROLE_ID INTEGER NOT NULL
+);
+
+
+ALTER TABLE "EJAVA".USER_ROLE ADD CONSTRAINT USER_CHECK_ME
+Foreign Key(GROUP_ID) REFERENCES "EJAVA".USER_GROUP(GROUP_ID);
+
+
+
+CREATE TABLE "EJAVA".USER_GROUP_MAPPING (
+USER_ID INTEGER NOT NULL,
+GROUP_ID INTEGER NOT NULL);
+
+ALTER TABLE "EJAVA".USER_GROUP_MAPPING ADD CONSTRAINT USER_GROUP_MP
+Foreign Key(GROUP_ID) REFERENCES "EJAVA".USER_GROUP(GROUP_ID);
+
+ALTER TABLE "EJAVA".USER_GROUP_MAPPING ADD CONSTRAINT USER_GROUP_MPP
+Foreign Key (user_id) REFERENCES "EJAVA".bubble_book_user (user_id);
+
+-- FOR USER_GROUP
+-- @ManyToMany
+-- @JoinTable(name="USER_GROUP_MAPPING"
+-- joinColumns=@JoinColumn(name="GROUP_ID",
+-- referencedColumnName="groupId")
+-- inverseJoinColumns=@JoinColumn(name="USER_ID",
+-- referencedColumnName="userId")
+-- Collection<BubbleBookUser> users;
+
+-- 
+-- @Entity
+-- bubble_book_user
+-- @ManyToMany(mappedBy="users")
+-- Collection<UserGroup> userGroups;
+
+
+-- 
+-- @Entity 
+-- user_group
+-- @oneToOne
+-- private UserRole role;
+
+-- 
+-- @Entity
+-- USER_ROLE
+-- @OneToOne(mappedBy=role)
+-- private UserGroup group;
+
+

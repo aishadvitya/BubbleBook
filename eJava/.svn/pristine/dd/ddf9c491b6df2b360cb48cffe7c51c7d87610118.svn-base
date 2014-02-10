@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+        <h:head>
+                <title>Video Page</title>
+        </h:head>
+
+        <h:body>
+            
+            <h:form id="form">
+                
+                <p:media id="preview" value="#{aVBubble.url}" width="#{aVBubble.width}" height="#{aVBubble.height}" player="flash"/>
+                
+                <p:panelGrid columns="2" styleClass="bubble" rendered="#{aVBubble.editable}">
+
+                    URL: <p:inputText value="#{aVBubble.url}" size="30">
+                        <f:ajax render="@form" onevent="onblur" />
+                    </p:inputText>
+                    Title: <p:inputText value="#{aVBubble.title}" size="30" />
+                    
+                    <p:commandButton value="Submit" 
+                                     actionListener="#{aVBubble.add()}" 
+                                     ajax="disabled" />
+                 </p:panelGrid>
+                
+                <p:panelGrid columns="2" styleClass="bubble" rendered="#{!aVBubble.editable}">
+
+                    URL: <p:inputText value="#{aVBubble.url}" size="30">
+                    <f:ajax render="@form" onevent="onblur" />
+                    </p:inputText>
+                    Title: <p:inputText value="#{aVBubble.title}" size="30" />
+                    
+                    <p:commandButton value="Edit" 
+                                     actionListener="#{aVBubble.render()}" 
+                                     ajax="disabled" />
+                 </p:panelGrid>
+
+                
+                 <h:commandLink value="Reply" />
+                 <h:commandLink value="Hide" />
+              </h:form>
+        </h:body>
+    
+</html>
+

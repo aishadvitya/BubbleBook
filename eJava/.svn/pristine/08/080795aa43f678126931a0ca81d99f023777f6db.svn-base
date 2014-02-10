@@ -1,0 +1,165 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package com.iss.bubble.entity;
+
+import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author Sathish
+ */
+@Entity
+@DiscriminatorColumn(name="BUUBLE_TYPE")
+@DiscriminatorValue("SURVEY")
+@PrimaryKeyJoinColumn(name = "BUBBLE_ID")
+@Table(name = "BUBBLE_SURVEY", schema = "EJAVA")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "BubbleSurvey.findAll", query = "SELECT b FROM BubbleSurvey b"),
+    //@NamedQuery(name = "BubbleSurvey.findByAnswer", query = "SELECT b FROM BubbleSurvey b WHERE b.answer = :answer"),
+    //@NamedQuery(name = "BubbleSurvey.findByAnswervote", query = "SELECT b FROM BubbleSurvey b WHERE b.answervote = :answervote")
+})
+public class BubbleSurvey extends Bubble{
+//    @Id
+//    @Basic(optional = false)
+//    @NotNull
+//    @Column(name = "BUBBLE_ID", nullable = false)
+//    private Integer bubbleId;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Column(name = "SURVEY", nullable = false)
+    private Serializable survey;
+//    @JoinColumn(name = "BUBBLE_ID", referencedColumnName = "BUBBLE_ID", nullable = false, insertable = false, updatable = false)
+//    @OneToOne(optional = false)
+//    private Bubble bubble;
+    
+//    @Basic(optional = false)
+//    @NotNull
+//    @Column(name = "BUBBLE_SURVEY_ID")
+    //private Integer bubbleSurveyId;        
+//    @Basic(optional = false)
+//    @NotNull
+//    @Size(min = 1, max = 200)
+//    @Column(name = "ANSWER")
+//    private String answer;
+//    @Basic(optional = false)
+//    @NotNull
+//    @Column(name = "ANSWERVOTE")
+//    private int answervote;
+//    @JoinColumn(name = "BUBBLE_ID", referencedColumnName = "BUBBLE_ID")
+//    @ManyToOne(optional = false)
+//    private Bubble bubble;
+
+    public BubbleSurvey() {
+    }
+
+    public BubbleSurvey(Integer bubbleId) {
+        super(bubbleId);
+    }
+
+
+//    public String getAnswer() {
+//        return answer;
+//    }
+//
+//    public void setAnswer(String answer) {
+//        this.answer = answer;
+//    }
+//
+//    public int getAnswervote() {
+//        return answervote;
+//    }
+//
+//    public void setAnswervote(int answervote) {
+//        this.answervote = answervote;
+//    }
+
+//    @Override
+//    public int hashCode() {
+//        int hash = 0;
+//        hash += (bubbleId != null ? bubbleId.hashCode() : 0);
+//        return hash;
+//    }
+//
+//    @Override
+//    public boolean equals(Object object) {
+//        // TODO: Warning - this method won't work in the case the id fields are not set
+//        if (!(object instanceof BubbleSurvey)) {
+//            return false;
+//        }
+//        BubbleSurvey other = (BubbleSurvey) object;
+//        if ((this.bubbleId == null && other.bubbleId != null) || (this.bubbleId != null && !this.bubbleId.equals(other.bubbleId))) {
+//            return false;
+//        }
+//        return true;
+//    }
+
+    @Override
+    public String toString() {
+        return "com.iss.bubble.entity.BubbleSurveyContent[ bubbleSurveyId=" + bubbleId + " ]";
+    }
+
+    public BubbleSurvey(Integer bubbleId, Serializable survey) {
+        this.bubbleId = bubbleId;
+        this.survey = survey;
+    }
+
+    public Serializable getSurvey() {
+        return survey;
+    }
+
+    public void setSurvey(Serializable survey) {
+        this.survey = survey;
+    }
+
+//    public Bubble getBubble() {
+//        return bubble;
+//    }
+//
+//    public void setBubble(Bubble bubble) {
+//        this.bubble = bubble;
+//    }
+
+//    @Override
+//    public int hashCode() {
+//        int hash = 0;
+//        hash += (bubbleId != null ? bubbleId.hashCode() : 0);
+//        return hash;
+//    }
+//
+//    @Override
+//    public boolean equals(Object object) {
+//        // TODO: Warning - this method won't work in the case the id fields are not set
+//        if (!(object instanceof BubbleSurvey)) {
+//            return false;
+//        }
+//        BubbleSurvey other = (BubbleSurvey) object;
+//        if ((this.bubbleId == null && other.bubbleId != null) || (this.bubbleId != null && !this.bubbleId.equals(other.bubbleId))) {
+//            return false;
+//        }
+//        return true;
+//    }
+//   
+    
+}

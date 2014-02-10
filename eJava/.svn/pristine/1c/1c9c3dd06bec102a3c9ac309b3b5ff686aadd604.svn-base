@@ -1,0 +1,253 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.bean;
+
+import com.iss.bubble.ejb.BubbleEJB;
+import com.iss.bubble.ejb.DiscussionEJB;
+import com.iss.bubble.ejb.UserEJB;
+import com.iss.bubble.entity.Bubble;
+import com.iss.bubble.entity.BubbleBookUser;
+import com.iss.bubble.entity.BubbleHierarchy;
+import com.iss.bubble.entity.Discussion;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+/**
+ *
+ * @author Sathish
+ */
+@Named
+@SessionScoped
+public class DiscussionBean implements Serializable {
+
+    @EJB
+    BubbleEJB bubbleejb;
+    @EJB
+    DiscussionEJB discEjb;
+    @EJB
+    UserEJB userEjb;
+    
+    //Bubble Variables
+    HashMap<Bubble, List<Bubble>> hm;
+    private TreeNode root;
+    private String bubblesSrc = "/bubbles.xhtml";
+    private DiscussionDataModel discussionsModel;
+    private Discussion selectedDiscussion;
+    private List<Bubble> lstBubbles;
+    private Bubble selectedBubble = null;
+
+   
+    private boolean editSelected = false;
+    private ArrayList<TreeNode> bubbleTree = new ArrayList<>();
+    //end
+    
+    private List<Bubble> bubbles;
+
+    @Inject
+    ContactsBean contactsBean;
+
+    public DiscussionBean() {
+    }
+
+    @PostConstruct
+    public void initDiscs() {
+        //Get User from Sessiom
+        BubbleBookUser bbUser = userEjb.findUserByID(2);
+        List<Discussion> discussions = discEjb.retrieveDiscussionsByUsersID(bbUser);
+        discussionsModel = new DiscussionDataModel(discussions);
+        //discussionsModel.
+        buildBubbleTree(bubbleejb.retrieveBubbles(discussions.get(0).getDiscussionId()));
+        bubblesSrc = "/bubbles.xhtml";
+    }
+
+    public void buildBubbleTree(Collection<Bubble> lstBubbles) {
+        lstBubbles = new ArrayList<>();
+        lstBubbles = (List<Bubble>) bubbleejb.retrieveBubbles(1);
+        hm = new HashMap<>();
+        for (Bubble bu : lstBubbles) {
+            List<BubbleHierarchy> lst = (List<BubbleHierarchy>) bu.getBubbleHierarchyCollection();
+            List<Bubble> lstChildren = new ArrayList<Bubble>();
+            for (BubbleHierarchy l : lst) {
+                lstChildren.add(l.getBubble());
+            }
+            hm.put(bu, lstChildren);     
+        }
+
+        root = new DefaultTreeNode("root", null);
+        ArrayList<TreeNode> bubb = new ArrayList<>();
+        if (null != hm) {
+            for (Bubble b : hm.keySet()) {
+                System.out.println(b);
+                if (null == b.getBubbleHierarchy()) {
+                    bubbleTree.add(new DefaultTreeNode(b, root));
+                }
+            }
+        }
+        
+        for (TreeNode newTn : bubbleTree) {
+            Bubble c = (Bubble) newTn.getData();
+            List<Bubble> lst = (List<Bubble>) hm.get(c);
+            for (Bubble bs : lst) {
+                bubb.add(new DefaultTreeNode(bs, newTn));
+            }
+        }
+        bubbleTree.addAll(bubb);
+    }
+
+    public TreeNode getRoot() {
+        return root;
+    }
+
+    public void setRoot(TreeNode root) {
+        this.root = root;
+    }
+
+    public DiscussionDataModel getDiscussionsModel() {
+        return discussionsModel;
+    }
+
+    public void setDiscussionsModel(DiscussionDataModel discussionsModel) {
+        this.discussionsModel = discussionsModel;
+    }
+
+    public List<Bubble> getBubbles() {
+        return bubbles;
+    }
+
+    public void setBubbles(List<Bubble> bubbles) {
+        this.bubbles = bubbles;
+    }
+
+    public Discussion getSelectedDiscussion() {
+        return selectedDiscussion;
+    }
+
+    public void setSelectedDiscussion(Discussion selectedDiscussion) {
+        this.selectedDiscussion = selectedDiscussion;
+    }
+
+    public String getBubblesSrc() {
+        return bubblesSrc;
+    }
+    
+    public Bubble getSelectedBubble() {
+        return selectedBubble;
+    }
+
+    public void setSelectedBubble(Bubble selectedBubble) {
+        this.selectedBubble = selectedBubble;
+    }
+
+    public void setBubblesSrc(String bubblesSrc) {
+        this.bubblesSrc = bubblesSrc;
+    }
+
+    public void showNewDiscussion() {
+        selectedDiscussion = new Discussion();
+        bubblesSrc = "/newDiscussion.xhtml";
+    }
+
+    public void createNewDiscussion() {
+        /*
+         Logged in Bubble book User
+         */
+        selectedDiscussion.setUser(userEjb.findUserByID(1));
+        selectedDiscussion.setCreateTimestamp(new Date());
+        discEjb.saveDiscussion(selectedDiscussion);
+        bubblesSrc = "/bubbles.xhtml";
+    }
+
+    public void saveToDiscussion() {
+        System.out.println("in save :" + contactsBean.getSelectedContacts().size());
+        if (selectedDiscussion.getDiscussionId() == null) {
+            selectedDiscussion.setBubbleBookUserCollection(contactsBean.getSelectedContacts());
+            System.out.println("participant list new " + contactsBean.getSelectedContacts());            
+        } else {
+            discEjb.addUsersToDiscussion(contactsBean.getSelectedContacts(), selectedDiscussion);
+        }
+    }
+
+    public void onRowToggle(ToggleEvent event) {
+        //Fetch the Paticipants Images
+        //on expansion
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                "Discussion view",
+                "Title:" + ((Discussion) event.getData()).getTitle());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void onRowSelect(SelectEvent event) {
+        //based on the discussion Id
+        // Fetch the Bubbles
+        buildBubbleTree(bubbleejb.retrieveBubbles(selectedDiscussion.getDiscussionId()));
+        //bubbles = new ArrayList<>();
+        System.out.println("inside onrowselect");
+        bubblesSrc = "/bubbles.xhtml";
+        //bubbles.add(new Bubble(new Timestamp(new Date(1923, 1, 12).getTime()),"MAP","content"));
+        FacesMessage msg = new FacesMessage("Discussion Selected", ((Discussion) event.getObject()).getTitle());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void onRowUnselect(UnselectEvent event) {
+        FacesMessage msg = new FacesMessage("Discussion Unselected", ((Discussion) event.getObject()).getTitle());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+    //Edit Bubble 1
+    public void editBubble(Bubble b) {
+        if (!editSelected) {
+            editSelected = true;
+            setSelectedBubble(b);
+            selectedBubble.setIsEditable(true);
+        }
+    }
+
+    //Edit Bubble 2
+    public void saveEditedBubble(Bubble b) {
+        setSelectedBubble(b);
+        selectedBubble.setIsEditable(false);
+        System.out.println("Test Content " + b.getBubbleContent());
+        bubbleejb.saveBubble(b);
+        editSelected = false;
+    }
+
+    //Edit Bubble 3
+    public void CancelEdit(Bubble b) {
+        selectedBubble.setIsEditable(false);
+        editSelected = false;
+    }
+    //Test method
+
+    public void dummy() {
+        System.out.println("Dummy");
+    }
+    //Creating a new bubble
+
+    public void createNewBubble(String type) {
+        System.out.println("new");
+        Bubble newBubble = new Bubble();
+        newBubble.setBubbleType(type);
+        newBubble.setCreateTimestamp(new Date());
+        lstBubbles.add(newBubble);
+        bubbleTree.add(new DefaultTreeNode(newBubble, root));
+    }
+    
+
+}

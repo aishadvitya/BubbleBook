@@ -1,0 +1,197 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.entity;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Date;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+/**
+ *
+ * @author Sathish
+ */
+@Entity
+@Table(name = "DISCUSSION", schema = "EJAVA")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Discussion.findAll", query = "SELECT d FROM Discussion d"),
+    @NamedQuery(name = "Discussion.findByDiscussionId", query = "SELECT d FROM Discussion d WHERE d.discussionId = :discussionId"),
+    @NamedQuery(name = "Discussion.findByTitle", query = "SELECT d FROM Discussion d WHERE d.title = :title"),
+    @NamedQuery(name = "Discussion.findByDescription", query = "SELECT d FROM Discussion d WHERE d.description = :description"),
+    @NamedQuery(name = "Discussion.findDiscussionByUserId", query = "SELECT d FROM Discussion d WHERE d.user = :user"),
+    @NamedQuery(name = "Discussion.findByCreateTimestamp", query = "SELECT d FROM Discussion d WHERE d.createTimestamp = :createTimestamp"),
+    @NamedQuery(name = "Discussion.findAllByDiscussionIds", query = "SELECT d FROM Discussion d WHERE d.discussionId IN :discussionIds")})
+public class Discussion implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @TableGenerator(
+            name = "discussion_id_generator",
+            schema = "EJAVA",
+            table = "PKID_GEN_TABLE",
+            pkColumnName = "GEN_KEY",
+            valueColumnName = "GEN_VALUE",
+            pkColumnValue = "discussionId",
+            allocationSize = 1)
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE,
+            generator = "discussion_id_generator")
+    @Basic(optional = false)
+    @Column(name = "DISCUSSION_ID")
+    private Integer discussionId;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 200)
+    @Column(name = "TITLE")
+    private String title;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 500)
+    @Column(name = "DESCRIPTION")
+    private String description;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "CREATE_TIMESTAMP")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createTimestamp;
+
+    @JoinTable(schema = "EJAVA", name = "DISCUSSION_PARTICIPANTS", joinColumns = {
+        @JoinColumn(name = "DISCUSSION_ID", referencedColumnName = "DISCUSSION_ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")})
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Collection<BubbleBookUser> bubbleBookUserCollection;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discussionId", fetch = FetchType.LAZY)
+    private Collection<Bubble> bubbleCollection;
+
+    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")
+    @ManyToOne(optional = false)
+    private BubbleBookUser user;
+
+    public Discussion() {
+    }
+
+    public Discussion(Integer discussionId) {
+        this.discussionId = discussionId;
+    }
+
+    public Discussion(Integer discussionId, String title, String description, Date createTimestamp) {
+        this.discussionId = discussionId;
+        this.title = title;
+        this.description = description;
+        this.createTimestamp = createTimestamp;
+    }
+
+    public Integer getDiscussionId() {
+        return discussionId;
+    }
+
+    public void setDiscussionId(Integer discussionId) {
+        this.discussionId = discussionId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getCreateTimestamp() {
+        return createTimestamp;
+    }
+
+    public void setCreateTimestamp(Date createTimestamp) {
+        this.createTimestamp = createTimestamp;
+    }
+
+    @XmlTransient
+    public Collection<BubbleBookUser> getBubbleBookUserCollection() {
+        return bubbleBookUserCollection;
+    }
+
+    public void setBubbleBookUserCollection(Collection<BubbleBookUser> bubbleBookUserCollection) {
+        this.bubbleBookUserCollection = bubbleBookUserCollection;
+    }
+
+    @XmlTransient
+    public Collection<Bubble> getBubbleCollection() {
+        return bubbleCollection;
+    }
+
+    public void setBubbleCollection(Collection<Bubble> bubbleCollection) {
+        this.bubbleCollection = bubbleCollection;
+    }
+
+    public BubbleBookUser getUser() {
+        return user;
+    }
+
+    public void setUser(BubbleBookUser user) {
+        this.user = user;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (discussionId != null ? discussionId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Discussion)) {
+            return false;
+        }
+        Discussion other = (Discussion) object;
+        if ((this.discussionId == null && other.discussionId != null) || (this.discussionId != null && !this.discussionId.equals(other.discussionId))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.iss.bubble.entity.Discussion{" + "discussionId=" + discussionId + ", title=" + title + ", description=" + description + ", createTimestamp=" + createTimestamp + ", bubbleBookUserCollection=" + bubbleBookUserCollection + ", bubbleCollection=" + bubbleCollection + ", user=" + user + '}';
+    }
+
+//    @Override
+//    public int compareTo(Discussion d) {
+//        return d.getCreateTimestamp().compareTo(this.getCreateTimestamp());
+//    }
+}

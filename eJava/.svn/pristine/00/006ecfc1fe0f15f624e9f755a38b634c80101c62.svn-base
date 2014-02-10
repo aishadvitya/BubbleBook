@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <composite:interface>
+        <composite:attribute name="value" required="true" type="com.iss.bubble.entity.Bubble"/>
+
+
+    </composite:interface>
+
+    <composite:implementation>
+
+        <h:panelGroup id="viewEdit" rendered="#{cc.attrs.value.bubbleType=='MAP'}">
+            <h:panelGroup layout="block" >
+
+                <p:inplace editor="true" event="click" >  
+
+                    <p:ajax event="save" listener="#{discussionBean.saveEditedBubble(cc.attrs.value)}" update="@form" partialSubmit="true"/>
+                    <p:ajax event="cancel" listener="#{discussionBean.CancelEdit(cc.attrs.value)}" update="@form"/>
+                    <p:inputText value="#{cc.attrs.value.bubbleContent}"/>
+
+
+
+                </p:inplace>
+            </h:panelGroup> 
+            <br/>
+            <p:outputLabel value="#{cc.attrs.value.place}"/>
+            <h:panelGroup id="leftcol" layout="block" >     
+
+                <p:gmap id="maps" center="#{cc.attrs.value.locationLat},#{cc.attrs.value.locationLon}" 
+                        zoom="15" type="NORMAL" style="width:380px;height:170px" 
+                        model="#{bubbleUtil.getSimpleMapModel(cc.attrs.value.locationLat, cc.attrs.value.locationLon, cc.attrs.value.place)}"  
+                        widgetVar="map">  
+                </p:gmap>
+            </h:panelGroup> 
+            <p:separator />
+            <p:outputLabel value=" - #{cc.attrs.value.userId.name}, #{cc.attrs.value.createTimestamp}"/>
+        </h:panelGroup>
+        <h:panelGroup id="createMap" rendered="#{cc.attrs.value.bubbleType=='NewMAP'}">
+
+            <h:panelGroup id="mapDetails" layout="block" >
+              
+                 <p:inputText id="place1" value="#{mapBubble.place}">
+
+                        <f:ajax render="maps1" event="blur" listener="#{mapBubble.updateMap()}"/>
+
+                    </p:inputText>
+
+                <p:outputLabel value="#{mapBubble.comment}"/> 
+
+
+
+            </h:panelGroup> 
+            <h:panelGroup id="leftcol2" layout="block" >
+                <p:growl id="messages" showDetail="true" life="2000" />        
+                <p:gmap id="maps1" center="#{mapBubble.coord.lat},#{mapBubble.coord.lng}" zoom="15" type="HYBRID" style="width:380px;height:170px" model="#{mapBubble.simpleModel}"  widgetVar="map">  
+                    <p:ajax event="pointSelect" listener="#{mapBubble.addMarker}" update="maps1"  rendered="true"/> 
+
+                </p:gmap>
+
+            </h:panelGroup> 
+
+
+        </h:panelGroup>
+
+
+    </composite:implementation>
+
+</html>
+

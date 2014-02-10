@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"                
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"                
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:bb="http://java.sun.com/jsf/composite/bubbles"
+                template="masterLayout.xhtml">
+    <ui:define name="header">
+        <p:layoutUnit position="north" collapsible="false" resizable="false" closable="false" size="80">
+            <bb:header header="#{msg.title}" showUser="true"/>
+        </p:layoutUnit>
+    </ui:define>
+    <ui:define name="body">
+        <p:layoutUnit position="center" collapsible="false" resizable="false" closable="false" size="600">
+            <h:panelGrid id="homeGrid" columns="2" columnClasses="centerPane,rightPane" width="100%">
+               
+                <h:panelGroup id="homeCenterPG">
+                    <ui:insert name="centerPane"/>
+                </h:panelGroup>
+
+                <h:panelGroup id="homeRightPG">
+                    <ui:insert name="rightPane"/>
+                </h:panelGroup>
+            </h:panelGrid>
+        </p:layoutUnit>
+    </ui:define>
+</ui:composition>

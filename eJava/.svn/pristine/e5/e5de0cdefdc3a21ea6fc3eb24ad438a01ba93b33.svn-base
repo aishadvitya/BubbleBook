@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:bb="http://java.sun.com/jsf/composite/bubbles"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:bubbles="http://java.sun.com/jsf/composite/bubbles">
+    <h:outputStylesheet library="css" name="styles.css" /> 
+    <h:form id="bubblesSearchForm">
+
+
+        <h:panelGroup id="searchBubblePanel">
+            <p:selectManyMenu id="scroll" value="#{discussionBean.selectedSearchParticipants}" converter="contact" style="width:150px;height:200px" var="p" showCheckbox="true">  
+                <f:selectItems value="#{discussionBean.selectedDiscussion.bubbleBookUserCollection}" var="user" itemLabel="#{user.name}" itemValue="#{user}" />  
+                <p:column>  
+                    <p:graphicImage value="/resources/temp/#{p.imageUrl}" width="40"/>  
+                </p:column>  
+                <p:column>  
+                    #{p.name}   
+                </p:column>  
+            </p:selectManyMenu>
+
+            <p:calendar value="#{discussionBean.searchDate}" pattern="MM/dd/yyyy HH:mm" showOn="button"/>
+            <p:commandButton value="Search" action="#{discussionBean.filterByDateAndName}" update="treetableSearch"/>
+
+
+            <p:tree id="treetableSearch" value="#{discussionBean.rootForFilter}" var="b" 
+                    style="width:500px"  animate="true" dynamic="true"
+                    > 
+                <p:treeNode>    
+
+                    <div class="bubble">
+
+                        <h:panelGroup id="map" rendered="#{b.bubbleType.contains('MAP')}" >
+
+                            <bubbles:Map value="#{b}" />
+
+                        </h:panelGroup>
+
+                        <h:panelGroup id="text" rendered="#{b.bubbleType.contains('TEXT')}"  >
+                            <bubbles:Text value="#{b}" />
+                        </h:panelGroup>
+
+                        <h:panelGroup id="survey" rendered="#{b.bubbleType.contains('SURVEY')}"  >
+                            <bubbles:Survey value="#{b}" />
+                        </h:panelGroup>
+
+                        <h:panelGroup id="video" rendered="#{b.bubbleType.contains('AV')}"  >
+                            <bubbles:Video value="#{b}" />
+                        </h:panelGroup>
+                        <h:panelGroup id="event" rendered="#{b.bubbleType.contains('EVENT')}"  >
+                            <bubbles:Event value="#{b}" />
+                        </h:panelGroup>
+                    </div>
+                </p:treeNode>  
+            </p:tree>  
+        </h:panelGroup>
+    </h:form>
+</html>

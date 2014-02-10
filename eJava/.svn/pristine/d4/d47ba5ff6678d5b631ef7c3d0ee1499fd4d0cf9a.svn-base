@@ -1,0 +1,46 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.bean;
+
+import java.io.Serializable;  
+import java.util.ArrayList;  
+import java.util.List;  
+import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;  
+import javax.faces.context.FacesContext;  
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+import org.primefaces.event.DragDropEvent;  
+
+@Named
+@ViewScoped
+public class ContactsTemp implements Serializable {  
+  
+    private List<Participant> players;  
+  
+    private List<Participant> selectedPlayers;  
+  
+    public ContactsTemp() {  
+        players = new ArrayList<Participant>();  
+        selectedPlayers = new ArrayList<Participant>();  
+        players.add(new Participant("Messi", 10, "player1.jpg", "hello"));  
+        players.add(new Participant("Villa", 7, "player2.jpg", "hello"));  
+    }  
+  
+    public List<Participant> getPlayers() {  
+        return players;  
+    }  
+  
+    public List<Participant> getSelectedPlayers() {  
+        return selectedPlayers;  
+    }  
+  
+    public void onDrop(DragDropEvent event) {  
+        Participant player = (Participant) event.getData();  
+          selectedPlayers.add(player);  
+          FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(player.getName() + " added", "Position:" + event.getDropId()));  
+    }  
+}  
+          

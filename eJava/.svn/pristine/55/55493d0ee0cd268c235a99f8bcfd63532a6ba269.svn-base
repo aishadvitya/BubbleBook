@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation>
+        <ui:define name="title">BubbleApp Register</ui:define>
+
+        <h:form id="registerForm">
+            <p:fieldset id="panel" legend="Register" style="width: 50%">  
+                <hr/>
+                <p:focus context="panel"/>  
+
+                <p:messages />  
+
+                <h:panelGrid columns="3" columnClasses="registerLabel, registerText, registerMsg">  
+                    <h:outputLabel for="firstname" value="Firstname: *" />  
+                    <p:inputText id="firstname" required="true" label="Firstname"  
+                                 value="#{loginBean.bubbleBookUser.name}" >  
+                        <f:validateLength minimum="2" />  
+                    </p:inputText>  
+                    <p:message for="firstname" />  
+
+                    <h:outputLabel for="userId" value="User Id: *" />  
+                    <p:inputText id="userId" required="true" label="Surname"  
+                                 value="#{loginBean.bubbleBookUser.userId}" />  
+                    <p:message for="userId" />  
+                    <h:outputLabel for="password" value="Password: *" />  
+                    <p:inputText id="password" required="true" label="Surname"  
+                                 value="#{loginBean.bubbleBookUser.password}" />  
+                    <p:message for="password" />
+                    <h:outputLabel for="abtme" value="About me: *" />  
+                    <p:inputText id="abtme" required="true" label="Surname"  
+                                 value="#{loginBean.bubbleBookUser.abtMe}" />  
+                    <p:message for="abtme" /> 
+                    <h:outputLabel for="email" value="E-Mail: *" />  
+                    <p:inputText id="email" required="true" label="Surname"  
+                                 value="#{loginBean.bubbleBookUser.email}" />  
+                    <p:message for="email" /> 
+
+                    <p:photoCam widgetVar="pc" listener="#{loginBean.oncapture}" update="photos"/>  
+
+                    <p:commandButton type="button" value="Capture" onclick="PF('pc').capture();"/>  
+
+                    <p:imageSwitch effect="zoom" id="photos">  
+                        <ui:repeat value="#{loginBean.photos}" var="photo">  
+                            <p:graphicImage value="/photocam/#{photo}.png" />  
+                        </ui:repeat>  
+                    </p:imageSwitch> 
+
+                </h:panelGrid>  
+                <hr />
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Reset" process="@form"
+                                     update=":welcomeRightPG"> 
+                        <p:resetInput target="panel" />  
+                    </p:commandButton>
+                    <p:commandButton value="Register"
+                                     actionListener="#{loginBean.saveUser}" process="@form"
+                                     update=":welcomeRightPG"/>  
+                </h:panelGrid>
+            </p:fieldset> 
+        </h:form>
+    </composite:implementation>
+</html>

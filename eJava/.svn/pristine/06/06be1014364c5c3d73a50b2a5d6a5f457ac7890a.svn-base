@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:bb="http://java.sun.com/jsf/composite/bubbles"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:form id="discussionForm">
+
+        <p:growl id="growl" showDetail="true"/>
+        <p:panelGrid columns="2" style="height: 10%">
+            <h:panelGroup>
+                <h:graphicImage id="profileIcon" library="temp" url="/resources/temp/#{bubblebookuser.imageUrl}" width="70" height="50"/>
+                <p:tooltip for="profileIcon" value="#{bubblebookuser.name}" showEffect="clip" hideEffect="explode" /> 
+            </h:panelGroup>
+            <p:commandButton value="New Discussion" actionListener="#{discussionBean.showNewDiscussion()}" process="@form" update=":homeGrid"/>
+        </p:panelGrid>
+
+        <p:dataTable id="discussionTable" var="disc" value="#{discussionBean.discussionsModel}" paginator="true" rows="5"  
+                     selection="#{discussionBean.selectedDiscussion}" selectionMode="single" rendered="#{!request.isUserInRole('ADMIN')}">
+
+            <p:ajax event="rowToggle" listener="#{discussionBean.onRowToggle}" update=":discussionForm:growl" />
+            <p:ajax event="rowSelect" listener="#{discussionBean.onRowSelect}" update=":homeGrid :discussionForm:growl" />  
+            <p:ajax event="rowUnselect" listener="#{discussionBean.onRowUnselect}" update=":discussionForm:growl"/>  
+            <f:facet name="header">  
+                My Discussions
+            </f:facet> 
+
+            <p:column style="width:2%">
+                <p:rowToggler />
+            </p:column>
+
+            <p:column style="width:69%">
+                <f:facet name="header">
+                    Title
+                </f:facet>
+                <h:outputText value="#{disc.title}" />
+            </p:column>
+
+            <p:column style="width:29%">
+                <f:facet name="header">
+                    Created On
+                </f:facet>
+                <h:outputText value="#{disc.createTimestamp}" >
+                    <f:convertDateTime pattern="EEE, MMM, dd, yyyy" />
+                </h:outputText>
+            </p:column>
+
+            <p:rowExpansion>
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="width:300px;"
+                             styleClass=" ui-widget-content grid">
+
+                    <f:facet name="header">
+                        <ui:repeat value="#{disc.bubbleBookUserCollection}" var="participant" varStatus="row">
+                            <p:graphicImage id="partIcon" value="/resources/temp/#{participant.imageUrl}" width="40"/>                            
+                            <p:tooltip for="partIcon" value="#{participant.name}" showEffect="clip" hideEffect="explode" /> 
+                        </ui:repeat>
+                    </f:facet>
+
+                    <h:outputText value="#{disc.description}"/>
+
+                </h:panelGrid>
+
+            </p:rowExpansion>
+
+        </p:dataTable>
+
+        <p:dataTable id="discussionTable1" var="disc1" value="#{discussionBean.participantDiscussionsModel}" paginator="true" rows="5"  
+                     selection="#{discussionBean.selectedDiscussion}" selectionMode="single" >
+
+            <p:ajax event="rowToggle" listener="#{discussionBean.onRowToggle}" update=":discussionForm:growl" />
+            <p:ajax event="rowSelect" listener="#{discussionBean.onRowSelect}" update=":homeGrid :discussionForm:growl" />  
+            <p:ajax event="rowUnselect" listener="#{discussionBean.onRowUnselect}" update=":discussionForm:growl"/>  
+            <f:facet name="header">  
+                <h:outputText rendered="#{request.isUserInRole('ADMIN')}" value=" All Discussions" />
+
+                <h:outputText rendered="#{!request.isUserInRole('ADMIN')}" value=" My Participant Discussions" />
+
+
+            </f:facet> 
+
+            <p:column style="width:2%">
+                <p:rowToggler />
+            </p:column>
+
+            <p:column style="width:69%">
+                <f:facet name="header">
+                    Title
+                </f:facet>
+                <h:outputText value="#{disc1.title}" />
+            </p:column>
+
+            <p:column style="width:29%">
+                <f:facet name="header">
+                    Created On
+                </f:facet>
+                <h:outputText value="#{disc1.createTimestamp}" >
+                    <f:convertDateTime pattern="EEE, MMM, dd, yyyy" />
+                </h:outputText>
+            </p:column>
+
+            <p:rowExpansion>
+                <h:panelGrid id="display1" columns="2" cellpadding="4" style="width:300px;"
+                             styleClass=" ui-widget-content grid">
+
+                    <f:facet name="header">
+                        <p:graphicImage id="ownIcon" value="/resources/temp/#{disc1.user.imageUrl}" width="40"/>                            
+                        <p:tooltip for="ownIcon" value="Owner:#{disc1.user.name}" showEffect="clip" hideEffect="explode" /> 
+
+                        <ui:repeat value="#{disc1.bubbleBookUserCollection}" var="participant1" varStatus="row">
+                            <p:graphicImage id="partIcon1" value="/resources/temp/#{participant1.imageUrl}" width="40"/>                            
+                            <p:tooltip for="partIcon1" value="#{participant1.name}" showEffect="clip" hideEffect="explode" /> 
+                        </ui:repeat>
+                    </f:facet>
+
+                    <h:outputText value="#{disc1.description}"/>
+
+                </h:panelGrid>
+
+            </p:rowExpansion>
+
+        </p:dataTable>
+    </h:form>
+
+</html>

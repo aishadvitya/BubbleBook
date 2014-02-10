@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <composite:interface>
+        <composite:attribute name="value" required="true" type="com.iss.bubble.entity.Bubble"/>
+
+
+    </composite:interface>
+
+    <composite:implementation>
+        <h:panelGroup id="viewPanelGroup" rendered="#{not empty cc.attrs.value.bubbleId}">
+            <h:panelGroup id="leftcol2" layout="block">
+
+                <h:panelGroup  layout="block">
+             
+                    <p:inplace id="ajaxInplace1" editor="#{cc.attrs.value.userId.email eq request.remoteUser}" event="dblclick" >  
+
+                        <p:ajax event="save" listener="#{discussionBean.saveEditedBubble(cc.attrs.value)}" update="@form"/>
+                        <p:ajax event="cancel" update="@form"/>
+                        <p:inputText value="#{cc.attrs.value.bubbleContent}" >
+                        </p:inputText>
+                    </p:inplace>
+                </h:panelGroup>
+
+            </h:panelGroup> 
+            <p:separator />
+        <h:graphicImage id="img" library="temp" url="/resources/temp/#{b.userId.imageUrl}" width="30" height="30">
+                <p:tooltip for="img" value="#{cc.attrs.value.userId.name}"/>
+            </h:graphicImage>
+            <p:outputLabel value="#{cc.attrs.value.createTimestamp}">
+                <f:convertDateTime pattern="EEE, MMM, dd, yyyy HH:mm" />
+            </p:outputLabel>
+            </h:panelGroup>
+  <h:panelGroup id="createText" rendered="#{empty cc.attrs.value.bubbleId}">
+
+            <h:panelGrid headerClass="list-header"
+                         rowClasses="list-row-even, list-row-odd"
+                         >   
+                <h:panelGroup id="leftcol12" layout="block" >
+
+                    <p:inputTextarea id="inputTxt" value="#{discussionBean.newBubble.bubbleContent}"/> 
+                    <p:commandButton value="Submit" action="#{discussionBean.createBubble()}" update=":bubblesForm:treetable"/>
+                    <p:commandButton value="Cancel" action="#{discussionBean.cancelBubble()}" update=":bubblesForm:treetable"/>
+                </h:panelGroup> 
+            </h:panelGrid>  
+
+        </h:panelGroup>
+
+        <p:watermark for="inputTxt" value="Enter the text"/>
+
+    </composite:implementation>
+</html>
+

@@ -1,0 +1,80 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <composite:interface>
+        <composite:attribute name="title" required="true" type="java.lang.String"/>
+    </composite:interface>
+
+    <composite:implementation>
+        <ui:define name="title">#{cc.attrs.title}</ui:define>
+
+        <h:form id="modifyProfileForm" enctype="multipart/form-data">
+            <p:fieldset id="panel" legend="#{bubblebookuser.name}'s Profile" style="width: 100%">  
+                <hr/>
+                <p:focus context="panel"/>  
+
+                <p:messages for="modifyProfilePanel"/>  
+
+                <h:panelGrid id="modifyProfilePanel" columns="4" columnClasses="registerLabel, registerText, registerMsg">
+                    <h:outputLabel for="firstname" value="Firstname: " /> 
+                    <p:inputText id="firstname"
+                                 label="Firstname"  
+                                 value="#{loginBean.username}" 
+                                 requiredMessage="Please enter a username."
+                                 validatorMessage="Username minimum length of 3">  
+                        <f:validateLength minimum="3" />  
+                    </p:inputText>  
+                    <p:message for="firstname" />  
+                    <p:watermark for="firstname" value="#{bubblebookuser.name}" />
+
+                    <h:outputLabel for="aboutme" value="About you: " />  
+                    <p:inputTextarea id="aboutme" 
+                                     label="About me"  
+                                     value="#{loginBean.aboutme}" />  
+                    <p:message for="aboutme" />
+                    <p:watermark for="aboutme" value="#{bubblebookuser.abtMe}" />
+
+                    <h:outputLabel for="password" value="Change Password: " />  
+                    <p:password id="password" 
+                                label="Password"  
+                                value="#{loginBean.password}" 
+                                requiredMessage="Please enter a password"
+                                feedback="true"/>  
+                    <p:message for="password" />
+                    <p:watermark for="password" value="New Password Here" />
+
+                </h:panelGrid>  
+                <hr />
+
+                <p:growl id="msg" />
+                Change your Profile Pic:<br/><br />
+
+                <p:outputPanel id="photogroup" rendered="#{not empty loginBean.file}">
+                    #{loginBean.file.fileName}
+                </p:outputPanel>
+
+                <p:fileUpload
+                    value="#{loginBean.file}"
+                    mode="advanced"
+                    fileUploadListener="#{loginBean.handleFileUpload}"
+                    allowTypes="/(\.|\/)(gif|jpg|jpeg|gif|png|PNG|GIF|JPG|JPEG)$/" 
+                    auto="true"
+                    update="msg"
+                    oncomplete="photogroup"/>
+                <hr />
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Update Profile"
+                                     action="#{loginBean.modifyProfile}" process="@form"
+                                     update="@form" oncomplete="@form"/>  
+                </h:panelGrid>
+            </p:fieldset> 
+            <p:fieldset id="userImage"> 
+                <h:graphicImage library="temp" url="/resources/temp/#{bubblebookuser.imageUrl}" width="250" height="250"/>
+            </p:fieldset> 
+        </h:form>
+    </composite:implementation>
+</html> 

@@ -1,0 +1,75 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.iss.bubble.bean;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
+
+/**
+ *
+ * @author Sathish
+ */
+@Named
+@RequestScoped
+public class BubbleNote implements Serializable {
+    
+    private String title="desc";
+    private String description="desc";
+private List<String> lst=new ArrayList<String>();
+    /**
+     * @return the title
+     */
+//public List<String> getBubbleNote()
+//{
+//        getLst().add("naga");
+//        getLst().add("rajan");
+//return  getLst();
+//}
+
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title the title to set
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the lst
+     */
+    public List<String> getLst() {
+         lst.add("naga");
+      lst.add("rajan");
+        return lst;
+    }
+
+    /**
+     * @param lst the lst to set
+     */
+    public void setLst(List<String> lst) {
+        this.lst = lst;
+    }
+    
+}
